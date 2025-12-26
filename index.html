@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirect to Telegram</title>
+  <script>
+    const path = window.location.pathname.slice(1); 
+    
+    const botLink = "https://t.me/your_bot"; 
+
+    const tgLink = path ? `${botLink}?start=${path}` : botLink;
+
+    window.location.replace(tgLink);
+  </script>
+</head>
+<body>
+  <p>Перенаправление в Telegram...</p>
+</body>
+</html>
