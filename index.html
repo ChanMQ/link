@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,7 +33,7 @@
       overflow: hidden;
     }
 
-    /* ФОНОВЫЙ ПАТТЕРН (Детализированные дудлы: Листья, Фикусы и Самолётики) */
+    /* ФОНОВЫЙ ПАТТЕРН (Дудлы в стиле TG: Фикусы и Самолётики) прямо в SVG */
     .background-pattern {
       position: absolute;
       top: 0;
@@ -42,65 +42,9 @@
       height: 100%;
       z-index: -1;
       background-color: #030303;
-      overflow: hidden;
-    }
-
-    .ficus-layer {
-      position: absolute;
-      top: -100%;
-      left: -100%;
-      width: 300%;
-      height: 300%;
+      background-image: url("data:image/svg+xml,%3Csvg width='150' height='150' viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231c1c1c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Листья фикуса --%3E%3Cpath d='M20 30 c15-20 35-5 20 15 c-15 20-35 5-20-15 Z'/%3E%3Cpath d='M100 110 c20-15 5-35 -15-20 c-20 15-5 35 15 20 Z'/%3E%3Cpath d='M40 90 c8 15 25 20 30 8 c8-15-15-25-30-8 Z'/%3E%3Cpath d='M110 40 c-8-15-25-20-30-8 c-8 15 15 25 30 8 Z'/%3E%3C!-- Бумажные самолетики --%3E%3Cpath d='M65 65 l20-12 -6 25 -7-8 -5 6 -1-11 Z'/%3E%3Cpath d='M15 120 l15-10 -4 20 -5-6 -4 5 -1-9 Z'/%3E%3Cpath d='M120 20 l18-12 -5 25 -6-7 -4 6 -1-12 Z'/%3E%3C!-- Мелкие элементы и завитушки --%3E%3Cpath d='M135 80 c8 8 15-8 8-15 c-8-8-15 8-8 15 Z'/%3E%3Cpath d='M30 140 c-8-8-15 8-8 15 c8 8 15-8 8-15 Z'/%3E%3Ccircle cx='50' cy='20' r='1.5' fill='%231c1c1c'/%3E%3Ccircle cx='100' cy='60' r='2' fill='%231c1c1c'/%3E%3Ccircle cx='25' cy='70' r='1.5' fill='%231c1c1c'/%3E%3Ccircle cx='80' cy='120' r='1.5' fill='%231c1c1c'/%3E%3Ccircle cx='140' cy='130' r='1' fill='%231c1c1c'/%3E%3Cpath d='M50 130 q 15 -15 30 0'/%3E%3Cpath d='M120 100 q -15 15 -30 0'/%3E%3Cpath d='M80 15 q 10 10 20 -5'/%3E%3C/g%3E%3C/svg%3E");
       background-repeat: repeat;
-      /* Hardware acceleration for smooth parallax */
-      transform: translateZ(0);
-    }
-
-    /* Layer 1: Large Ficus Leaves (Deepest, darkest, slowest) */
-    .layer-1 {
-      background-size: 800px 800px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%230f0f0f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Ficus Lyrata Base Motif --%3E%3Cg id='lyrata'%3E%3Cpath d='M 50 0 C 80 20, 100 60, 60 100 C 20 140, 120 180, 50 220 C -20 180, 80 140, 40 100 C 0 60, 20 20, 50 0 Z'/%3E%3Cpath d='M 50 0 L 50 210'/%3E%3Cpath d='M 50 40 Q 70 30 80 20 M 50 80 Q 70 70 85 50 M 50 120 Q 75 110 90 90 M 50 160 Q 70 150 80 130'/%3E%3Cpath d='M 50 40 Q 30 30 20 20 M 50 80 Q 30 70 15 50 M 50 120 Q 25 110 10 90 M 50 160 Q 30 150 20 130'/%3E%3C/g%3E%3C!-- Distributed variations --%3E%3Cuse href='%23lyrata' x='100' y='150' transform='rotate(15 150 260) scale(0.8)'/%3E%3Cuse href='%23lyrata' x='500' y='50' transform='rotate(-45 550 160) scale(1.1)'/%3E%3Cuse href='%23lyrata' x='300' y='500' transform='rotate(75 350 610) scale(0.9)'/%3E%3Cuse href='%23lyrata' x='700' y='600' transform='rotate(-15 750 710) scale(0.7)'/%3E%3Cuse href='%23lyrata' x='-50' y='650' transform='rotate(40 0 760) scale(1)'/%3E%3C/g%3E%3C/svg%3E");
-      animation: drift-layer-1 180s linear infinite;
-    }
-
-    /* Layer 2: Medium Vines & Botanical doodles (Mid-depth) */
-    .layer-2 {
-      background-size: 530px 530px; /* Prime-like offset sizing to break repetition */
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 530 530'%3E%3Cg fill='none' stroke='%23171717' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Rubber Plant Motif --%3E%3Cg id='elastica'%3E%3Cpath d='M 30 0 C 60 0, 60 80, 30 100 C 0 80, 0 0, 30 0 Z'/%3E%3Cpath d='M 30 0 L 30 95'/%3E%3C/g%3E%3C!-- Wavy Vine --%3E%3Cg id='vine'%3E%3Cpath d='M 0 0 Q 30 30 20 60 T 40 120 T 20 180'/%3E%3Cpath d='M 15 30 Q 30 20 40 10 M 25 90 Q 40 80 50 70 M 30 150 Q 45 140 55 130'/%3E%3C/g%3E%3Cuse href='%23elastica' x='80' y='80' transform='rotate(42 110 130)'/%3E%3Cuse href='%23elastica' x='350' y='200' transform='rotate(-60 380 250) scale(0.8)'/%3E%3Cuse href='%23elastica' x='150' y='400' transform='rotate(110 180 450) scale(1.2)'/%3E%3Cuse href='%23vine' x='200' y='50' transform='rotate(15 220 140)'/%3E%3Cuse href='%23vine' x='400' y='350' transform='rotate(-85 420 440)'/%3E%3Cuse href='%23vine' x='50' y='250' transform='rotate(45 70 340)'/%3E%3Ccircle cx='250' cy='300' r='12' stroke-dasharray='2 4'/%3E%3Ccircle cx='450' cy='100' r='8' stroke-dasharray='2 4'/%3E%3C/g%3E%3C/svg%3E");
-      animation: drift-layer-2 140s linear infinite reverse;
-    }
-
-    /* Layer 3: Paper Planes & Micro Details (Foreground, crispest, fastest) */
-    .layer-3 {
-      background-size: 370px 370px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 370 370'%3E%3Cg fill='none' stroke='%23222222' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Minimal Telegram Plane --%3E%3Cg id='plane'%3E%3Cpath d='M 5 15 L 35 5 L 20 35 L 17 22 Z'/%3E%3Cpath d='M 35 5 L 17 22 L 17 30 L 22 25'/%3E%3C/g%3E%3C!-- Abstract tech crosses / dots --%3E%3Cg id='cross'%3E%3Cpath d='M 5 0 L 5 10 M 0 5 L 10 5'/%3E%3C/g%3E%3Cuse href='%23plane' x='50' y='50' transform='rotate(25 65 65)'/%3E%3Cuse href='%23plane' x='250' y='200' transform='rotate(-15 265 215) scale(0.8)'/%3E%3Cuse href='%23plane' x='100' y='300' transform='rotate(60 115 315) scale(1.1)'/%3E%3Cuse href='%23cross' x='150' y='120'/%3E%3Cuse href='%23cross' x='300' y='80'/%3E%3Cuse href='%23cross' x='200' y='280'/%3E%3Ccircle cx='80' cy='200' r='1.5' fill='%23222222'/%3E%3Ccircle cx='320' cy='320' r='1.5' fill='%23222222'/%3E%3Ccircle cx='180' cy='40' r='1.5' fill='%23222222'/%3E%3C/g%3E%3C/svg%3E");
-      animation: drift-layer-3 100s linear infinite;
-    }
-
-    /* Animations for seamless infinite drift */
-    @keyframes drift-layer-1 {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-800px, -800px, 0); }
-    }
-
-    @keyframes drift-layer-2 {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(530px, -530px, 0); }
-    }
-
-    @keyframes drift-layer-3 {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-370px, 370px, 0); }
-    }
-
-    /* Subtle radial gradient overlay to fade edges into darkness */
-    .background-pattern::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, transparent 0%, #030303 100%);
-      z-index: 10;
-      pointer-events: none;
+      background-size: 150px 150px;
     }
 
     /* Главная карточка */
@@ -267,11 +211,7 @@
   </style>
 </head>
 <body>
-  <div class="background-pattern">
-    <div class="ficus-layer layer-1"></div>
-    <div class="ficus-layer layer-2"></div>
-    <div class="ficus-layer layer-3"></div>
-  </div>
+  <div class="background-pattern"></div>
 
   <main class="container">
 
@@ -313,6 +253,7 @@
               fill="url(#glass)"/>
       </g>
 
+      <!-- листья -->
       <path d="M256 230
                C200 180, 160 260, 256 330
                C270 290, 280 260, 256 230 Z"
