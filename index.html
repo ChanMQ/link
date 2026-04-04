@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="page-title">Redirect to Telegram</title>
+  <title id="page-title">Redirect to Telegram - Ficus Bot</title>
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
   <style>
+    /* Базовые настройки */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -17,8 +18,8 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #050505;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #030303; /* Максимально глубокий черный */
       color: #ffffff;
       display: flex;
       align-items: center;
@@ -27,22 +28,157 @@
       text-align: center;
       padding: 24px;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+      overflow: hidden;
     }
 
-    .container {
-      max-width: 400px;
+    /* ФОНОВЫЙ ПАТТЕРН (Дудлы в стиле TG: Фикусы и Самолётики) прямо в SVG */
+    .background-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      background-color: #111111;
-      padding: 40px 32px;
-      border-radius: 16px;
-      border: 1px solid #222222;
+      height: 100%;
+      z-index: -1;
+      background-color: #030303;
+      background-image: url("data:image/svg+xml,%3Csvg width='150' height='150' viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231c1c1c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Листья фикуса --%3E%3Cpath d='M20 30 c15-20 35-5 20 15 c-15 20-35 5-20-15 Z'/%3E%3Cpath d='M100 110 c20-15 5-35 -15-20 c-20 15-5 35 15 20 Z'/%3E%3Cpath d='M40 90 c8 15 25 20 30 8 c8-15-15-25-30-8 Z'/%3E%3Cpath d='M110 40 c-8-15-25-20-30-8 c-8 15 15 25 30 8 Z'/%3E%3C!-- Бумажные самолетики --%3E%3Cpath d='M65 65 l20-12 -6 25 -7-8 -5 6 -1-11 Z'/%3E%3Cpath d='M15 120 l15-10 -4 20 -5-6 -4 5 -1-9 Z'/%3E%3Cpath d='M120 20 l18-12 -5 25 -6-7 -4 6 -1-12 Z'/%3E%3C!-- Мелкие элементы и завитушки --%3E%3Cpath d='M135 80 c8 8 15-8 8-15 c-8-8-15 8-8 15 Z'/%3E%3Cpath d='M30 140 c-8-8-15 8-8 15 c8 8 15-8 8-15 Z'/%3E%3Ccircle cx='50' cy='20' r='1.5' fill='%231c1c1c'/%3E%3Ccircle cx='100' cy='60' r='2' fill='%231c1c1c'/%3E%3Ccircle cx='25' cy='70' r='1.5' fill='%231c1c1c'/%3E%3Ccircle cx='80' cy='120' r='1.5' fill='%231c1c1c'/%3E%3Ccircle cx='140' cy='130' r='1' fill='%231c1c1c'/%3E%3Cpath d='M50 130 q 15 -15 30 0'/%3E%3Cpath d='M120 100 q -15 15 -30 0'/%3E%3Cpath d='M80 15 q 10 10 20 -5'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 150px 150px;
     }
 
-    .icon {
-      width: 56px;
-      height: 56px;
+    /* Главная карточка */
+    .container {
+      max-width: 420px;
+      width: 100%;
+      background-color: #0a0a0a;
+      padding: 48px 32px 32px 32px;
+      border-radius: 12px;
+      border: 1px solid #1f1f1f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Легкий синий отблеск границы */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      border-radius: 12px;
+      border: 1px solid #114477;
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    /* Стили для встроенного SVG логотипа */
+    .logo-container {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ficus-logo-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 32px;
+    }
+
+    /* Блок с юзернеймом над кнопками */
+    .username-wrapper {
+      width: 100%;
       margin-bottom: 20px;
-      fill: #ffffff;
+    }
+
+    .username-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px; /* Чуть увеличил отступ для самолетика */
+      padding: 8px 16px;
+      background-color: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #a3a3a3;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .username-link:hover {
+      border-color: #24A124;
+      color: #ffffff;
+      background-color: #081a08;
+    }
+
+    .username-link svg {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
+    }
+
+    /* Кнопки */
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    /* Основная зеленая кнопка */
+    .button-primary {
+      background-color: #24A124;
+      color: #ffffff;
+    }
+
+    .button-primary:hover {
+      background-color: #1f8a1f;
+    }
+
+    /* Вторичная кнопка */
+    .button-secondary {
+      background-color: transparent;
+      color: #a3a3a3;
+      border: 1px solid #2a2a2a;
+    }
+
+    .button-secondary:hover {
+      background-color: #141414;
+      color: #ffffff;
+      border-color: #3f3f3f;
     }
 
     .icon-small {
@@ -51,110 +187,94 @@
       fill: currentColor;
     }
 
-    .title {
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    .description {
-      font-size: 15px;
-      color: #888888;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-
+    /* Блок VPN внизу */
     .vpn-note {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       font-size: 13px;
-      color: #777777;
-      margin-bottom: 28px;
+      color: #666666;
+      width: 100%;
+      padding-top: 24px;
+      border-top: 1px solid #1a1a1a;
     }
 
     .vpn-note svg {
       fill: #555555;
     }
 
-    .button-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      padding: 16px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-    }
-
-    .button-primary {
-      background-color: #E02424;
-      color: #ffffff;
-    }
-
-    .button-primary:hover {
-      background-color: #C81E1E;
-    }
-
-    .button-secondary {
-      background-color: transparent;
-      color: #cccccc;
-      border: 1px solid #333333;
-    }
-
-    .button-secondary:hover {
-      background-color: #1a1a1a;
-      color: #ffffff;
-      border-color: #555555;
-    }
-
-    .username-link {
-      font-size: 14px;
-      font-weight: 500;
-      color: #555555;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .username-link:hover {
-      color: #ffffff;
-    }
-
+    /* Утилита скрытия элементов до загрузки */
     .hidden {
       display: none !important;
     }
   </style>
 </head>
 <body>
+  <div class="background-pattern"></div>
+
   <main class="container">
-    <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.06-.2-.06-.06-.16-.04-.23-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+
+    <div class="logo-container">
+    <svg class="ficus-logo-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#7fe0ff"/>
+          <stop offset="60%" stop-color="#3b6fa3"/>
+          <stop offset="100%" stop-color="#1e2a4f"/>
+        </radialGradient>
+
+        <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#4fd1c5" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#0f2c4c" stop-opacity="0.2"/>
+        </radialGradient>
+
+        <linearGradient id="glass" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#7f9db5" stop-opacity="0.9"/>
+        </linearGradient>
+
+        <radialGradient id="leaf" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#7dff7a"/>
+          <stop offset="100%" stop-color="#1c7c3c"/>
+        </radialGradient>
+
+        <filter id="shadow">
+          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.4"/>
+        </filter>
+      </defs>
+
+      <circle cx="256" cy="256" r="230" fill="url(#bgGrad)"/>
+      <circle cx="256" cy="256" r="180" fill="url(#innerGlow)"/>
+
+      <g filter="url(#shadow)">
+        <rect x="150" y="150" width="212" height="212" rx="35"
+              transform="rotate(45 256 256)"
+              fill="url(#glass)"/>
+      </g>
+
+      <!-- листья -->
+      <path d="M256 230
+               C200 180, 160 260, 256 330
+               C270 290, 280 260, 256 230 Z"
+            fill="url(#leaf)"/>
+
+      <path d="M256 230
+               C312 180, 352 260, 256 330
+               C242 290, 232 260, 256 230 Z"
+            fill="url(#leaf)"/>
     </svg>
+    </div>
 
-    <h1 class="title" id="title">Запуск бота</h1>
-    <p class="description" id="description">Нажмите на кнопку ниже, чтобы продолжить работу в Telegram.</p>
+    <h1 class="title" id="title">Ficus Bot</h1>
 
-    <div class="vpn-note">
-      <svg class="icon-small" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
-      </svg>
-      <span id="vpn-text">Используйте VPN, если ссылка не открывается</span>
+    <div class="username-wrapper hidden" id="username-wrapper">
+      <a href="#" id="tg-username-link" class="username-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+        <span id="username-text"></span>
+      </a>
     </div>
 
     <div class="button-group hidden" id="action-buttons">
@@ -168,30 +288,31 @@
       </button>
     </div>
 
-    <a href="#" id="tg-username-link" class="username-link hidden"></a>
+    <div class="vpn-note">
+      <svg class="icon-small" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+      </svg>
+      <span id="vpn-text">Используйте VPN при проблемах с доступом</span>
+    </div>
   </main>
 
   <script>
     const translations = {
       ru: {
-        pageTitle: "Переход в Telegram",
-        title: "Запуск бота",
-        description: "Нажмите на кнопку ниже, чтобы продолжить работу в Telegram.",
-        vpnText: "Используйте VPN, если ссылка не открывается",
+        pageTitle: "Переход в Telegram - Ficus Bot",
+        title: "Ficus Bot",
+        vpnText: "Используйте VPN при проблемах с доступом",
         btnOpen: "Открыть Telegram",
         btnCopy: "Скопировать ссылку",
-        btnCopied: "Скопировано!",
-        errorFetch: "Ошибка загрузки данных конфигурации"
+        btnCopied: "Успешно скопировано"
       },
       en: {
-        pageTitle: "Redirect to Telegram",
-        title: "Launch Bot",
-        description: "Click the button below to continue in Telegram.",
-        vpnText: "Use a VPN if the link doesn't open",
-        btnOpen: "Open Telegram",
+        pageTitle: "Redirect to Telegram - Ficus Bot",
+        title: "Ficus Bot",
+        vpnText: "Use a VPN if the connection fails",
+        btnOpen: "Open in Telegram",
         btnCopy: "Copy Link",
-        btnCopied: "Copied!",
-        errorFetch: "Error loading configuration data"
+        btnCopied: "Copied successfully"
       }
     };
 
@@ -203,7 +324,6 @@
       document.documentElement.lang = lang;
       document.getElementById("page-title").textContent = translations[lang].pageTitle;
       document.getElementById("title").textContent = translations[lang].title;
-      document.getElementById("description").textContent = translations[lang].description;
       document.getElementById("vpn-text").textContent = translations[lang].vpnText;
 
       const btnOpen = document.getElementById("tg-btn");
@@ -215,20 +335,19 @@
       let BOT_LINK = "";
       let BOT_USERNAME = "";
 
-      // 2. Асинхронная загрузка конфига (простой запрос без дополнительных заголовков для обхода CORS)
+      // 2. Загрузка конфига
       try {
         const url = `https://raw.githubusercontent.com/ChanMQ/chanmq.github.io/main/config.json?t=${Date.now()}`;
         const response = await fetch(url);
 
         if (!response.ok) throw new Error("Network response was not ok");
         const config = await response.json();
-        
+
         BOT_LINK = config.BOT_LINK;
         BOT_USERNAME = config.BOT_USERNAME;
 
       } catch (error) {
         console.error("Не удалось загрузить config.json:", error);
-        document.getElementById("description").textContent = translations[lang].errorFetch;
         return;
       }
 
@@ -240,10 +359,12 @@
       if (btnOpen) btnOpen.href = tgLink;
 
       const usernameLink = document.getElementById("tg-username-link");
-      if (usernameLink) {
+      const usernameText = document.getElementById("username-text");
+      const usernameWrapper = document.getElementById("username-wrapper");
+      if (usernameLink && usernameText && usernameWrapper) {
         usernameLink.href = tgLink;
-        usernameLink.textContent = `Telegram ${BOT_USERNAME}`;
-        usernameLink.classList.remove("hidden");
+        usernameText.textContent = `Telegram ${BOT_USERNAME}`;
+        usernameWrapper.classList.remove("hidden");
       }
 
       const actionButtons = document.getElementById("action-buttons");
