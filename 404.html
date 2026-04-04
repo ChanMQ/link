@@ -196,6 +196,7 @@
     };
 
     document.addEventListener("DOMContentLoaded", async () => {
+      // 1. Применение локализации
       const userLang = navigator.language || navigator.userLanguage;
       const lang = userLang.toLowerCase().startsWith('ru') ? 'ru' : 'en';
 
@@ -214,20 +215,14 @@
       let BOT_LINK = "";
       let BOT_USERNAME = "";
 
+      // 2. Асинхронная загрузка конфига (простой запрос без дополнительных заголовков для обхода CORS)
       try {
-        // ЖЕСТКИЙ СБРОС КЭША: Добавлен параметр cache: 'no-store' и уникальный рандомный токен
-        const url = `https://raw.githubusercontent.com/ChanMQ/chanmq.github.io/main/config.json?t=${Date.now()}&r=${Math.random()}`;
-        const response = await fetch(url, {
-          method: 'GET',
-          cache: 'no-store', // Указывает браузеру вообще не использовать кэш
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache'
-          }
-        });
+        const url = `https://raw.githubusercontent.com/ChanMQ/chanmq.github.io/main/config.json?t=${Date.now()}`;
+        const response = await fetch(url);
 
         if (!response.ok) throw new Error("Network response was not ok");
         const config = await response.json();
+        
         BOT_LINK = config.BOT_LINK;
         BOT_USERNAME = config.BOT_USERNAME;
 
@@ -237,9 +232,11 @@
         return;
       }
 
+      // 3. Формирование финальной ссылки
       const path = window.location.pathname.replace(/^\/+/, "");
       const tgLink = path ? `${BOT_LINK}?start=${encodeURIComponent(path)}` : BOT_LINK;
 
+      // 4. Подстановка ссылок и показ кнопок
       if (btnOpen) btnOpen.href = tgLink;
 
       const usernameLink = document.getElementById("tg-username-link");
@@ -254,6 +251,7 @@
         actionButtons.classList.remove("hidden");
       }
 
+      // 5. Логика кнопки копирования
       const copyBtn = document.getElementById("copy-btn");
       if (copyBtn) {
         copyBtn.addEventListener("click", () => {
@@ -268,6 +266,7 @@
         });
       }
 
+      // 6. Очистка хеша из URL
       if (window.location.hash) {
         history.replaceState(null, "", window.location.pathname + window.location.search);
       }
