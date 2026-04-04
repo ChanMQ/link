@@ -1,23 +1,212 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Redirect to Telegram</title>
-  <script>
-    const path = window.location.pathname.replace(/^\/+/, "");
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Redirect to Telegram</title>
 
-    const botLink = "https://t.me/ctmp_FicusBot";
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
-    const tgLink = path ? `${botLink}?start=${encodeURIComponent(path)}` : botLink;
-
-    if (window.location.hash) {
-      history.replaceState(null, "", window.location.pathname + window.location.search);
+  <style>
+    /* Базовый сброс */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    window.location.href = tgLink;
-  </script>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #050505; /* Глубокий, строгий черный фон */
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Карточка */
+    .container {
+      max-width: 440px;
+      width: 100%;
+      background-color: #111111;
+      padding: 48px 40px;
+      border-radius: 16px;
+      border: 1px solid #222222; /* Жесткая граница */
+    }
+
+    /* Иконка Telegram */
+    .icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 24px;
+      fill: #ffffff;
+    }
+
+    /* Типографика */
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .description {
+      font-size: 15px;
+      color: #888888;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Блок с предупреждением о VPN */
+    .vpn-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #a0a0a0;
+      margin-bottom: 32px;
+    }
+
+    .vpn-icon {
+      width: 16px;
+      height: 16px;
+      fill: #888888;
+      flex-shrink: 0;
+    }
+
+    /* Главная кнопка */
+    .button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 16px;
+      background-color: #E02424; /* Строгий красный акцент */
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+
+    .button:hover {
+      background-color: #C81E1E;
+    }
+
+    /* Ссылка на юзернейм */
+    .username-link {
+      display: inline-block;
+      margin-top: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555555;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .username-link:hover {
+      color: #ffffff;
+    }
+  </style>
 </head>
 <body>
-  <p>Перенаправление в Telegram...</p>
+  <main class="container">
+    <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.06-.2-.06-.06-.16-.04-.23-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+    </svg>
+
+    <h1 class="title" id="title">Запуск бота</h1>
+    <p class="description" id="description">Нажмите на кнопку ниже, чтобы продолжить работу в приложении Telegram.</p>
+
+    <div class="vpn-note">
+      <svg class="vpn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+      </svg>
+      <span id="vpn-text">Используйте VPN, чтобы открыть бота</span>
+    </div>
+
+    <a href="#" id="tg-btn" class="button">Открыть Telegram</a>
+
+    <a href="#" id="tg-username-link" class="username-link"></a>
+  </main>
+
+  <script>
+    // ==========================================
+    // КОНФИГУРАЦИЯ: МЕНЯТЬ ССЫЛКИ ТОЛЬКО ЗДЕСЬ
+    // ==========================================
+    const BOT_LINK = "https://t.me/kwoj_FicusBot";
+    const BOT_USERNAME = "@kwoj_FicusBot";
+    // ==========================================
+
+    // Локализация
+    const translations = {
+      ru: {
+        pageTitle: "Переход в Telegram",
+        title: "Запуск бота",
+        description: "Нажмите на кнопку ниже, чтобы продолжить работу в приложении Telegram.",
+        vpnText: "Используйте VPN, чтобы открыть бота",
+        btn: "Открыть Telegram"
+      },
+      en: {
+        pageTitle: "Redirect to Telegram",
+        title: "Launch Bot",
+        description: "Click the button below to continue in the Telegram app.",
+        vpnText: "Please use a VPN to open the bot",
+        btn: "Open Telegram"
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Определение языка
+      const userLang = navigator.language || navigator.userLanguage;
+      const lang = userLang.toLowerCase().startsWith('ru') ? 'ru' : 'en';
+
+      // 2. Применение текстов локализации
+      document.documentElement.lang = lang;
+      document.getElementById("page-title").textContent = translations[lang].pageTitle;
+      document.getElementById("title").textContent = translations[lang].title;
+      document.getElementById("description").textContent = translations[lang].description;
+      document.getElementById("vpn-text").textContent = translations[lang].vpnText;
+
+      const btn = document.getElementById("tg-btn");
+      if (btn) {
+        btn.textContent = translations[lang].btn;
+      }
+
+      // 3. Подстановка ссылок из КОНФИГУРАЦИИ
+      const path = window.location.pathname.replace(/^\/+/, "");
+
+      // Формируем ссылку для кнопки (добавляем параметр path, если он есть)
+      const tgLink = path ? `${BOT_LINK}?start=${encodeURIComponent(path)}` : BOT_LINK;
+
+      if (btn) {
+        btn.href = tgLink;
+      }
+
+      // Заполняем нижнюю ссылку с юзернеймом
+      const usernameLink = document.getElementById("tg-username-link");
+      if (usernameLink) {
+        usernameLink.href = BOT_LINK;
+        usernameLink.textContent = `Telegram ${BOT_USERNAME}`;
+      }
+
+      // 4. Очистка хеша
+      if (window.location.hash) {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    });
+  </script>
 </body>
 </html>
