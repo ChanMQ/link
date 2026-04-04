@@ -217,9 +217,7 @@
 
       // 2. Асинхронная загрузка конфига с ПРЯМОЙ ссылки из твоего репозитория chanmq.github.io
       try {
-        const response = await fetch(`https://chanmq.github.io/config.json?t=${Date.now()}`);
-        if (!response.ok) throw new Error("Network response was not ok");
-
+        const response = await fetch(`https://raw.githubusercontent.com/ChanMQ/chanmq.github.io/main/config.json?t=${Date.now()}`);        if (!response.ok) throw new Error("Network response was not ok");
         const config = await response.json();
         BOT_LINK = config.BOT_LINK;
         BOT_USERNAME = config.BOT_USERNAME;
