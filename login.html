@@ -391,7 +391,6 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
-                /* Паддинги статичны, чтобы не грузить процессор при анимации */
                 padding: 0 2px 4px 2px;
                 margin: 0;
                 border: none;
@@ -400,15 +399,20 @@
                 opacity: 0;
                 visibility: hidden;
                 overflow: hidden;
-                transform: none !important;
-                /* Очень плавная кривая высоты, только 2 свойства */
-                transition: max-height 0.4s var(--ios-ease), opacity 0.2s ease-out, visibility 0.4s;
+                transform: translate3d(0, -8px, 0);
+                pointer-events: none;
+                contain: layout paint;
+                backface-visibility: hidden;
+                will-change: max-height, opacity, transform;
+                transition: max-height 0.32s var(--ios-ease), opacity 0.18s ease-out, transform 0.28s var(--ios-ease), visibility 0.32s;
             }
             .input-group.open .dropdown-menu {
-                max-height: 250px;
+                max-height: 320px;
                 opacity: 1;
                 visibility: visible;
-                transition: max-height 0.4s var(--ios-ease), opacity 0.3s ease-in 0.05s, visibility 0.4s;
+                transform: translate3d(0, 0, 0);
+                pointer-events: auto;
+                transition: max-height 0.32s var(--ios-ease), opacity 0.22s ease-out, transform 0.28s var(--ios-ease), visibility 0.32s;
             }
             .dropdown-header {
                 grid-column: 1 / -1;
@@ -972,6 +976,57 @@
             else { openDropdown(); homeserverInput.focus(); }
         }
 
+        function getVisibleInputs() {
+            return Array.from(document.querySelectorAll('.input-field:not(.search-field)')).filter(el => {
+                const group = el.closest('.input-group');
+                return group && !group.classList.contains('hidden') && el.offsetParent !== null;
+            });
+        }
+
+        function getNextVisibleInput(currentInput) {
+            const visibleInputs = getVisibleInputs();
+            const index = visibleInputs.indexOf(currentInput);
+            return index > -1 ? visibleInputs[index + 1] || null : null;
+        }
+
+        function keepFieldInView(input, behavior = 'smooth') {
+            if (!input) return;
+
+            const scrollToField = () => {
+                const rect = input.getBoundingClientRect();
+                const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+                const visibleTop = window.visualViewport ? window.visualViewport.offsetTop : 0;
+                const topPadding = 24;
+                const bottomPadding = 28;
+                const isAbove = rect.top < visibleTop + topPadding;
+                const isBelow = rect.bottom > visibleTop + viewportHeight - bottomPadding;
+
+                if (isAbove || isBelow) {
+                    input.scrollIntoView({
+                        behavior,
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                }
+            };
+
+            requestAnimationFrame(scrollToField);
+            setTimeout(scrollToField, 80);
+            setTimeout(scrollToField, 220);
+        }
+
+        function focusNextField(currentInput, behavior = 'smooth') {
+            const nextInput = getNextVisibleInput(currentInput);
+            if (!nextInput) return false;
+
+            requestAnimationFrame(() => {
+                nextInput.focus({ preventScroll: true });
+                keepFieldInView(nextInput, behavior);
+            });
+
+            return true;
+        }
+
         function handleInput(input) {
             clearError(input);
             openDropdown();
@@ -983,7 +1038,7 @@
             clearError(homeserverInput);
             closeDropdown();
             updateResetText();
-            if(currentMode !== 'reset') document.getElementById('username').focus();
+            focusNextField(homeserverInput);
         }
 
         document.addEventListener('click', (e) => {
@@ -1126,21 +1181,14 @@
                 }
 
                 if (e.target.tagName === 'INPUT' && !e.target.classList.contains('search-field')) {
-                    const visibleInputs = Array.from(document.querySelectorAll('.input-field:not(.search-field)')).filter(el => {
-                        const group = el.closest('.input-group');
-                        return group && !group.classList.contains('hidden') && el.offsetParent !== null;
-                    });
+                    const moved = focusNextField(e.target);
 
-                    const index = visibleInputs.indexOf(e.target);
-                    if (index > -1) {
-                        if (index < visibleInputs.length - 1) {
-                            e.preventDefault();
-                            visibleInputs[index + 1].focus();
-                        } else {
-                            e.preventDefault();
-                            e.target.blur();
-                            document.getElementById('primaryBtn').click();
-                        }
+                    if (moved) {
+                        e.preventDefault();
+                    } else {
+                        e.preventDefault();
+                        e.target.blur();
+                        document.getElementById('primaryBtn').click();
                     }
                 }
             }
@@ -1154,9 +1202,26 @@
             }
         };
 
-        document.addEventListener('focusin', handleInputEvents, { passive: true });
+        document.addEventListener('focusin', (e) => {
+            handleInputEvents(e);
+            if (e.target.classList && e.target.classList.contains('input-field') && !e.target.classList.contains('search-field')) {
+                keepFieldInView(e.target, 'auto');
+            }
+        }, { passive: true });
         document.addEventListener('input', handleInputEvents, { passive: true });
         document.addEventListener('change', handleInputEvents, { passive: true });
+
+        if (window.visualViewport) {
+            const handleViewportChange = () => {
+                const activeInput = document.activeElement;
+                if (activeInput && activeInput.classList && activeInput.classList.contains('input-field') && !activeInput.classList.contains('search-field')) {
+                    keepFieldInView(activeInput, 'auto');
+                }
+            };
+
+            window.visualViewport.addEventListener('resize', handleViewportChange);
+            window.visualViewport.addEventListener('scroll', handleViewportChange);
+        }
 
         // Скрипт для предотвращения прыжков интерфейса при ресайзе окна ПК
         let resizeTimer;
