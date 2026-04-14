@@ -1233,6 +1233,13 @@
 
                 if (e.target.tagName === 'INPUT' && !e.target.classList.contains('search-field')) {
                     e.preventDefault(); // Останавливаем стандартное поведение Enter (отправку формы)
+
+                    // Блокируем авто-переход к следующему полю для homeserver на мобильных устройствах
+                    if (window.innerWidth <= 1125 && e.target.id === 'homeserver') {
+                        e.target.blur(); // Скрываем клавиатуру (переход не делаем)
+                        return; // Прерываем дальнейшее выполнение
+                    }
+
                     const moved = focusNextField(e.target);
 
                     if (!moved) {
