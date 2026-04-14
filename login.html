@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>e2e.network — Авторизация</title>
+    <script src="./auth_lang.js"></script>
     <style>
         @font-face {
             font-family: 'Manrope';
@@ -38,7 +39,6 @@
         }
 
         :root {
-            /* Строгая палитра "clean tech" */
             --bg-base: #0b0b0d;
             --bg-surface: #151518;
             --bg-hover: #1c1c20;
@@ -378,40 +378,22 @@
         .close-dropdown-btn { display: none; }
 
         @media (max-width: 1125px) {
-            .dropdown-menu {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                padding: 0 12px 16px 12px;
-                width: calc(100% + 12px);
-                left: -6px;
-            }
+            .dropdown-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 16px 12px; width: calc(100% + 12px); left: -6px; }
             .dropdown-header { grid-column: 1 / -1; padding: 16px 4px 8px; border-bottom: none; }
             .dropdown-item { flex-direction: row; align-items: center; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255, 255, 255, 0.02); font-size: 14px; font-weight: 500; }
             .dropdown-item:hover { border-color: var(--accent); background: var(--bg-hover); }
             .dropdown-item small { display: none; }
             .dropdown-item:last-child { border-bottom: 1px solid var(--border); }
-
             .lang-modal-overlay { align-items: flex-end !important; }
             .lang-modal { max-width: 100% !important; border-radius: 20px 20px 0 0 !important; border-bottom: none !important; border-left: none !important; border-right: none !important; }
-
             .input-group:hover { --current-border: var(--border); --current-label: var(--text-muted); }
             .input-group:focus-within, .input-group.open { --current-border: var(--accent); --current-label: var(--accent); }
             .input-group.invalid:hover { --current-border: var(--accent) !important; --current-label: var(--accent) !important; }
-
             .primary-btn:hover { background: var(--accent); }
             .primary-btn:active { background: var(--accent-hover); transform: scale(0.98); }
             .secondary-btn:hover { background: var(--accent-soft); }
             .secondary-btn:active { background: rgba(218, 74, 68, 0.18); transform: scale(0.98); }
-
-            .close-dropdown-btn {
-                display: flex !important;
-                color: #ffffff !important;
-                border-color: var(--accent) !important;
-                background: var(--accent) !important;
-                gap: 6px;
-                font-weight: 600;
-            }
+            .close-dropdown-btn { display: flex !important; color: #ffffff !important; border-color: var(--accent) !important; background: var(--accent) !important; gap: 6px; font-weight: 600; }
             .close-dropdown-btn:active { background: var(--accent-hover) !important; }
         }
 
@@ -420,28 +402,10 @@
             .input-group.open .dropdown-menu { transform: translateX(0); }
             .input-group .chevron-icon { transform: rotate(-90deg); }
             .input-group.open .chevron-icon { transform: rotate(90deg); }
-
             .lang-modal-overlay { position: fixed; inset: 0; background: transparent !important; pointer-events: none; display: block; }
             .lang-modal-overlay.active { pointer-events: none; }
-
-            .lang-modal {
-                position: absolute;
-                top: 24px;
-                left: calc(50% + 220px);
-                width: 280px;
-                height: 464px;
-                margin: 0;
-                max-width: none;
-                border: 2px solid var(--border-hover);
-                border-radius: var(--radius-elem);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-                pointer-events: auto;
-                transform: translate(-20px, 0) !important;
-            }
-            .lang-modal-overlay.active .lang-modal {
-                transform: translate(0, 0) !important;
-            }
-
+            .lang-modal { position: absolute; top: 24px; left: calc(50% + 220px); width: 280px; height: 464px; margin: 0; max-width: none; border: 2px solid var(--border-hover); border-radius: var(--radius-elem); box-shadow: 0 20px 40px rgba(0,0,0,0.6); pointer-events: auto; transform: translate(-20px, 0) !important; }
+            .lang-modal-overlay.active .lang-modal { transform: translate(0, 0) !important; }
             .lang-list { height: calc(100% - 73px); flex-grow: 1; }
             .lang-close-btn { display: none !important; }
         }
@@ -449,7 +413,6 @@
         .forgot-pass-container { display: flex; justify-content: flex-end; margin-top: -4px; margin-bottom: 4px; }
         .forgot-pass-link { color: var(--accent); font-size: 14px; text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
         .forgot-pass-link:hover { opacity: 0.8; }
-
         .actions-wrapper { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; width: 100%; }
         .primary-btn, .secondary-btn { width: 100%; height: 54px; border: none; border-radius: var(--radius-elem); font-family: var(--font-family); font-size: 15px; font-weight: 600; letter-spacing: 0.02em; cursor: pointer; transition: background 0.2s ease, transform 0.1s ease; display: flex; align-items: center; justify-content: center; text-transform: uppercase; will-change: transform, background-color; }
         .btn-icon { display: flex; align-items: center; justify-content: center; margin-right: 8px; }
@@ -463,30 +426,10 @@
         .spinner { display: none; width: 22px; height: 22px; border: 2px solid rgba(255, 255, 255, 0.3); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
-
         .lang-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; will-change: opacity, visibility; }
         .lang-modal-overlay.active { opacity: 1; visibility: visible; }
-
-        .lang-modal {
-            width: 100%;
-            max-width: 340px;
-            background: var(--bg-surface);
-            border: 2px solid var(--border-hover);
-            border-radius: var(--radius-elem);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: none;
-            transform: translate(0, 100%);
-            opacity: 0;
-            transition: transform 0.35s var(--ios-ease), opacity 0.3s var(--ios-ease);
-            will-change: transform, opacity;
-        }
-        .lang-modal-overlay.active .lang-modal {
-            transform: translate(0, 0) !important;
-            opacity: 1;
-        }
-
+        .lang-modal { width: 100%; max-width: 340px; background: var(--bg-surface); border: 2px solid var(--border-hover); border-radius: var(--radius-elem); display: flex; flex-direction: column; overflow: hidden; box-shadow: none; transform: translate(0, 100%); opacity: 0; transition: transform 0.35s var(--ios-ease), opacity 0.3s var(--ios-ease); will-change: transform, opacity; }
+        .lang-modal-overlay.active .lang-modal { transform: translate(0, 0) !important; opacity: 1; }
         .lang-modal-header { padding: 16px 14px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: var(--bg-surface); }
         .search-field { background-color: var(--bg-surface) !important; padding-left: 44px !important; box-shadow: 0 0 0 1000px var(--bg-surface) inset, 0 0 0 1px var(--current-border) !important; }
         .search-label { left: 44px !important; background-color: transparent !important; }
@@ -495,7 +438,6 @@
         .search-field:focus ~ .search-icon { color: var(--accent); }
         .lang-close-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s var(--ios-ease); margin-top: -4px; }
         .lang-close-btn:hover { background: var(--bg-hover); color: var(--text-main); }
-
         .lang-list { height: 320px; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 4px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
         .lang-list::-webkit-scrollbar { width: 6px; }
         .lang-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
@@ -505,7 +447,6 @@
         .lang-item.selected:hover { background: rgba(218, 74, 68, 0.18); }
         .lang-item.selected svg { color: var(--accent); flex-shrink: 0; }
         .lang-empty { height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-muted); font-size: 15px; }
-
     </style>
 </head>
 <body class="loading">
@@ -527,7 +468,7 @@
             <div class="lang-modal-header">
                 <div class="input-group" style="flex: 1; margin-bottom: 0;">
                     <input type="text" id="langSearch" class="input-field search-field" placeholder=" " oninput="filterLanguages()">
-                    <label class="input-label search-label" id="lblSearchPlace">Поиск языка...</label>
+                    <label class="input-label search-label" id="lblSearchPlace">Search language...</label>
                     <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
@@ -567,14 +508,14 @@
 
         <div class="auth-header">
             <h1>e2e.network</h1>
-            <p id="headerSubtitle">Укажите свой homeserver и введите данные для входа.</p>
+            <p id="headerSubtitle">Enter your homeserver and login details.</p>
         </div>
 
         <form class="auth-form" id="authForm" novalidate onsubmit="handleAuth(event)">
 
             <div class="input-group" id="hsGroup">
                 <input type="text" id="homeserver" class="input-field has-icon" placeholder=" " value="" autocomplete="off" onfocus="openDropdown()" oninput="handleInput(this)">
-                <label class="input-label" id="lblHomeserver">Homeserver (напр. matrix.org)</label>
+                <label class="input-label" id="lblHomeserver">Homeserver (e.g. matrix.org)</label>
                 <button type="button" class="input-icon-btn" onclick="toggleDropdown(event)" tabindex="-1">
                     <svg class="chevron-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
@@ -582,8 +523,8 @@
                 </button>
 
                 <div class="dropdown-menu" id="hsMenu">
-                    <div class="dropdown-header" id="txtPopularServers">Популярные серверы</div>
-                    <div class="dropdown-item" onclick="selectServer('matrix.org')">matrix.org<small>Публичная сеть Matrix</small></div>
+                    <div class="dropdown-header" id="txtPopularServers">Popular Servers</div>
+                    <div class="dropdown-item" onclick="selectServer('matrix.org')">matrix.org<small>Public Matrix Network</small></div>
                     <div class="dropdown-item" onclick="selectServer('mozilla.org')">mozilla.org<small>Mozilla Foundation</small></div>
                     <div class="dropdown-item" onclick="selectServer('kde.org')">kde.org<small>KDE Community</small></div>
                     <div class="dropdown-item" onclick="selectServer('tchncs.de')">tchncs.de<small>Tech & Privacy</small></div>
@@ -593,7 +534,7 @@
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
-                        <span id="txtCloseServer">Закрыть</span>
+                        <span id="txtCloseServer">Close</span>
                     </div>
                 </div>
                 <div class="error-text"></div>
@@ -606,13 +547,13 @@
                     </svg>
                 </div>
                 <div class="reset-info-text" id="resetInfoText">
-                    Сервер <span id="resetHsName">matrix.org</span> отправит письмо со ссылкой для сброса пароля.
+                    Homeserver <span id="resetHsName">matrix.org</span> will send you an email to reset your password.
                 </div>
             </div>
 
             <div class="input-group" id="userGroup">
                 <input type="text" id="username" class="input-field" placeholder=" " autocomplete="username" oninput="clearError(this)">
-                <label class="input-label" id="lblUsername">Логин или @user:server</label>
+                <label class="input-label" id="lblUsername">Username or @user:server</label>
                 <div class="error-text"></div>
             </div>
 
@@ -624,7 +565,7 @@
 
             <div class="input-group">
                 <input type="password" id="password" class="input-field has-icon" placeholder=" " autocomplete="current-password" oninput="clearError(this)">
-                <label class="input-label" id="lblPassword">Пароль</label>
+                <label class="input-label" id="lblPassword">Password</label>
                 <button type="button" class="input-icon-btn" onclick="togglePasswordVisibility('password', this)" tabindex="-1">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"></path>
@@ -634,12 +575,12 @@
             </div>
 
             <div class="forgot-pass-container" id="forgotLinkWrap">
-                <a href="#" class="forgot-pass-link" id="lnkForgot" onclick="setMode('reset'); return false;">Забыли пароль?</a>
+                <a href="#" class="forgot-pass-link" id="lnkForgot" onclick="setMode('reset'); return false;">Forgot Password?</a>
             </div>
 
             <div class="input-group hidden" id="confirmPasswordGroup">
                 <input type="password" id="confirmPassword" class="input-field has-icon" placeholder=" " oninput="clearError(this)">
-                <label class="input-label" id="lblConfirm">Подтвердите пароль</label>
+                <label class="input-label" id="lblConfirm">Confirm Password</label>
                 <button type="button" class="input-icon-btn" onclick="togglePasswordVisibility('confirmPassword', this)" tabindex="-1">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"></path>
@@ -651,78 +592,73 @@
             <div class="actions-wrapper">
                 <button type="submit" class="primary-btn" id="primaryBtn">
                     <span class="btn-icon" id="primaryIconWrap"></span>
-                    <span id="btnText">ПРОДОЛЖИТЬ</span>
+                    <span id="btnText">LOG IN</span>
                     <div class="spinner" id="btnSpinner"></div>
                 </button>
 
                 <button type="button" class="secondary-btn" id="secondaryBtn" onclick="toggleMainMode()">
                     <span class="btn-icon" id="secondaryIconWrap"></span>
-                    <span id="btnSwitchText">СОЗДАТЬ АККАУНТ</span>
+                    <span id="btnSwitchText">CREATE ACCOUNT</span>
                 </button>
             </div>
         </form>
     </div>
 
     <script>
+        // Инициализация локализации из внешнего файла
+        const languages = window.authLanguages || [];
+        const i18n = window.authI18n || {};
+        let currentLangCode = 'en'; // Дефолт, если скрипт отвалится
+
+        function detectLanguage() {
+            const availableCodes = languages.map(l => l.code);
+
+            // 1. Сначала проверяем сохраненный выбор пользователя
+            const savedLang = localStorage.getItem('e2e_preferred_lang');
+            if (savedLang && availableCodes.includes(savedLang)) {
+                return savedLang;
+            }
+
+            // 2. Если ничего не сохранено, пытаемся прочитать язык браузера
+            if (navigator.language) {
+                const browserLang = navigator.language.toLowerCase();
+
+                // Ищем точное совпадение (напр. pt-br)
+                if (availableCodes.includes(browserLang)) return browserLang;
+
+                // Ищем короткое совпадение (напр. pt вместо pt-PT)
+                const shortLang = browserLang.split('-')[0];
+                if (availableCodes.includes(shortLang)) return shortLang;
+            }
+
+            // 3. Строгий откат на английский, если языка нет в словаре
+            return 'en';
+        }
+
+        // Безопасное получение словаря
+        function getDict() {
+            return i18n[currentLangCode] || i18n['en'];
+        }
+
+        // Выполняем до скрытия прелоадера
+        window.addEventListener('DOMContentLoaded', () => {
+            currentLangCode = detectLanguage();
+            updateUI();
+            renderLanguagesInitial();
+            refreshAutofillStyles();
+        });
+
+        // Снимаем прелоадер только когда страница загружена полностью
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
             setTimeout(() => {
                 preloader.classList.add('hidden');
                 document.body.classList.remove('loading');
             }, 600);
+
+            refreshAutofillStyles();
+            setTimeout(refreshAutofillStyles, 100);
         });
-
-        const languages = [
-            { code: 'cy', name: 'Cymraeg' }, { code: 'de', name: 'Deutsch' }, { code: 'en', name: 'English' },
-            { code: 'eo', name: 'Esperanto' }, { code: 'id', name: 'Indonesia' }, { code: 'mg', name: 'Malagasy' },
-            { code: 'nl', name: 'Nederlands' }, { code: 'vi', name: 'Tiếng Việt' }, { code: 'tr', name: 'Türkçe' },
-            { code: 'da', name: 'Dansk' }, { code: 'et', name: 'Eesti' }, { code: 'es', name: 'Español' },
-            { code: 'fr', name: 'Français' }, { code: 'gl', name: 'Galego' }, { code: 'hr', name: 'Hrvatski' },
-            { code: 'it', name: 'Italiano' }, { code: 'lv', name: 'Latviešu' }, { code: 'lt', name: 'Lietuvių' },
-            { code: 'hu', name: 'Magyar' }, { code: 'nb-no', name: 'Norsk bokmål' }, { code: 'pl', name: 'Polski' },
-            { code: 'pt', name: 'Português' }, { code: 'pt-br', name: 'Português (Brasil)' }, { code: 'sq', name: 'Shqip' },
-            { code: 'sk', name: 'Slovenčina' }, { code: 'fi', name: 'Suomi' }, { code: 'sv', name: 'Svenska' },
-            { code: 'is', name: 'Íslenska' }, { code: 'cs', name: 'Čeština' }, { code: 'el', name: 'Ελληνικά' },
-            { code: 'ru', name: 'Русский' }, { code: 'uk', name: 'Українська' }, { code: 'hy', name: 'Հայերեն' },
-            { code: 'he', name: 'עברית' }, { code: 'fa', name: 'فارسی' }, { code: 'lo', name: 'ລາວ' },
-            { code: 'ka', name: 'ქართული' }, { code: 'ja', name: '日本語' }, { code: 'zh-hans', name: '简体中文' },
-            { code: 'zh-hant', name: '繁體中文' }, { code: 'ko', name: '한국어' }
-        ];
-
-        let currentLangCode = 'ru';
-
-        const i18n = {
-            ru: {
-                searchPlace: "Поиск языка...", langEmpty: "Язык не найден",
-                subLogin: "Укажите свой homeserver и введите данные для входа.",
-                subRegister: "Укажите сервер и придумайте данные для нового аккаунта.",
-                subReset: "Восстановление доступа к аккаунту.",
-                lblHomeserver: "Homeserver (напр. matrix.org)", txtPopularServers: "Популярные серверы", txtCloseServer: "Закрыть",
-                lblUsernameLogin: "Логин или @user:server", lblUsernameReg: "Логин",
-                lblEmail: "Email", lblPasswordLogin: "Пароль", lblPasswordReg: "Придумайте пароль",
-                lblPasswordReset: "Новый пароль", lblConfirm: "Подтвердите пароль",
-                lnkForgot: "Забыли пароль?", btnContinue: "ВОЙТИ В АККАУНТ",
-                btnRegister: "ЗАРЕГИСТРИРОВАТЬСЯ", btnReset: "СБРОСИТЬ ПАРОЛЬ",
-                btnSwitchReg: "СОЗДАТЬ АККАУНТ", btnSwitchLogin: "ВЕРНУТЬСЯ КО ВХОДУ",
-                resetInfoHtml: "Сервер <span id='resetHsName'>{hs}</span> отправит письмо со ссылкой для сброса пароля.",
-                errRequired: "Обязательное поле", errEmail: "Некорректный email", errPasswordMatch: "Пароли не совпадают"
-            },
-            en: {
-                searchPlace: "Search language...", langEmpty: "Language not found",
-                subLogin: "Enter your homeserver and login details.",
-                subRegister: "Enter a server and create details for your new account.",
-                subReset: "Restore access to your account.",
-                lblHomeserver: "Homeserver (e.g. matrix.org)", txtPopularServers: "Popular Servers", txtCloseServer: "Close",
-                lblUsernameLogin: "Username or @user:server", lblUsernameReg: "Username",
-                lblEmail: "Email", lblPasswordLogin: "Password", lblPasswordReg: "Create Password",
-                lblPasswordReset: "New Password", lblConfirm: "Confirm Password",
-                lnkForgot: "Forgot Password?", btnContinue: "LOG IN",
-                btnRegister: "REGISTER", btnReset: "RESET PASSWORD",
-                btnSwitchReg: "CREATE ACCOUNT", btnSwitchLogin: "BACK TO LOGIN",
-                resetInfoHtml: "Homeserver <span id='resetHsName'>{hs}</span> will send you an email to reset your password.",
-                errRequired: "Required field", errEmail: "Invalid email", errPasswordMatch: "Passwords do not match"
-            }
-        };
 
         const btnIcons = {
             login: '<svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>',
@@ -738,7 +674,6 @@
 
         let cachedLangItems = [];
 
-        // ОПТИМИЗАЦИЯ: Рендерим все языки 1 раз при открытии, вместо полного перестроения DOM
         function renderLanguagesInitial() {
             langListEl.innerHTML = '';
             cachedLangItems = [];
@@ -757,7 +692,6 @@
             });
         }
 
-        // ОПТИМИЗАЦИЯ: Легковесный поиск без удаления DOM элементов
         function filterLanguages() {
             const filterText = langSearchInput.value.toLowerCase();
             let visibleCount = 0;
@@ -775,7 +709,7 @@
                 let emptyEl = document.getElementById('langEmptyState');
                 if (visibleCount === 0) {
                     if (!emptyEl) {
-                        const dict = i18n[i18n[currentLangCode] ? currentLangCode : 'en'];
+                        const dict = getDict();
                         langListEl.insertAdjacentHTML('beforeend', `<div id="langEmptyState" class="lang-empty">${dict.langEmpty}</div>`);
                     } else {
                         emptyEl.style.display = 'flex';
@@ -796,7 +730,7 @@
         function openLangModal() {
             if (langModalOverlay.classList.contains('active')) { closeLangModalBtn(); return; }
             langSearchInput.value = '';
-            renderLanguagesInitial(); // Инициализация 1 раз
+            renderLanguagesInitial();
             langListEl.scrollTop = 0;
             langModalOverlay.classList.add('active');
             requestAnimationFrame(() => { scrollToSelectedLanguage(); langSearchInput.focus(); });
@@ -821,6 +755,10 @@
         function selectLanguage(code, name) {
             currentLangCode = code;
             currentLangBtnText.textContent = name;
+
+            // Сохраняем выбор пользователя
+            localStorage.setItem('e2e_preferred_lang', code);
+
             closeLangModalBtn();
             updateUI();
             document.querySelectorAll('.input-group.invalid').forEach(el => el.classList.remove('invalid'));
@@ -829,7 +767,7 @@
         let currentMode = 'login';
 
         function updateUI() {
-            const text = i18n[i18n[currentLangCode] ? currentLangCode : 'en'];
+            const text = getDict();
             document.getElementById('lblSearchPlace').textContent = text.searchPlace;
             document.getElementById('lblHomeserver').textContent = text.lblHomeserver;
             document.getElementById('txtPopularServers').textContent = text.txtPopularServers;
@@ -838,11 +776,11 @@
             document.getElementById('lblConfirm').textContent = text.lblConfirm;
             document.getElementById('lnkForgot').textContent = text.lnkForgot;
 
-            let hsVal = document.getElementById('homeserver').value.trim() || (currentLangCode === 'ru' ? 'ваш сервер' : 'your server');
+            let hsVal = document.getElementById('homeserver').value.trim() || text.defaultHsName;
             document.getElementById('resetInfoText').innerHTML = text.resetInfoHtml.replace('{hs}', hsVal);
 
-            const activeLangObj = languages.find(l => l.code === currentLangCode) || languages[30];
-            currentLangBtnText.textContent = activeLangObj.name;
+            const activeLangObj = languages.find(l => l.code === currentLangCode) || languages.find(l => l.code === 'en');
+            if (activeLangObj) currentLangBtnText.textContent = activeLangObj.name;
 
             setMode(currentMode, true);
         }
@@ -854,7 +792,7 @@
 
         function applyModeChanges(mode) {
             currentMode = mode;
-            const text = i18n[i18n[currentLangCode] ? currentLangCode : 'en'];
+            const text = getDict();
 
             const userGroup = document.getElementById('userGroup');
             const emailGroup = document.getElementById('emailGroup');
@@ -951,7 +889,7 @@
                 formEl.style.transform = 'translateX(-15px)';
                 subtitle.style.transform = 'translateX(-15px)';
 
-                void formEl.offsetWidth; // Reflow для рестарта анимации
+                void formEl.offsetWidth;
 
                 formEl.style.transition = 'opacity 0.25s var(--ios-ease), transform 0.25s var(--ios-ease)';
                 subtitle.style.transition = 'opacity 0.25s var(--ios-ease), transform 0.25s var(--ios-ease)';
@@ -971,7 +909,7 @@
             const el = document.getElementById(id);
             const group = el.closest('.input-group');
             const errText = group.querySelector('.error-text');
-            const text = i18n[i18n[currentLangCode] ? currentLangCode : 'en'];
+            const text = getDict();
 
             if (!condition) {
                 group.classList.remove('invalid');
@@ -1017,8 +955,9 @@
         });
 
         function updateResetText() {
+            const text = getDict();
             const span = document.getElementById('resetHsName');
-            if (span) { span.textContent = homeserverInput.value.trim() || (currentLangCode === 'ru' ? 'ваш сервер' : 'your server'); }
+            if (span) { span.textContent = homeserverInput.value.trim() || text.defaultHsName; }
         }
 
         function togglePasswordVisibility(inputId, btn) {
@@ -1108,7 +1047,6 @@
             }, 1200);
         }
 
-        // ОПТИМИЗАЦИЯ: Кэшируем стили и инпуты, чтобы избежать layout thrashing
         let cachedThemeColors = null;
         let cachedInputs = null;
 
@@ -1126,7 +1064,6 @@
                 cachedInputs = document.querySelectorAll('.input-field:not(.search-field)');
             }
 
-            // Выполняем отрисовку строго в следующем доступном кадре (плавность ввода)
             requestAnimationFrame(() => {
                 cachedInputs.forEach(input => {
                     input.style.color = cachedThemeColors.text;
@@ -1173,10 +1110,8 @@
             }
         });
 
-        window.addEventListener('load', () => { refreshAutofillStyles(); setTimeout(refreshAutofillStyles, 100); });
         window.addEventListener('pageshow', () => { refreshAutofillStyles(); setTimeout(refreshAutofillStyles, 100); });
 
-        // ОПТИМИЗАЦИЯ: Делегируем слушатели и снижаем нагрузку
         const handleInputEvents = (e) => {
             if (e.target.classList && e.target.classList.contains('input-field')) {
                 refreshAutofillStyles();
@@ -1187,8 +1122,6 @@
         document.addEventListener('input', handleInputEvents, { passive: true });
         document.addEventListener('change', handleInputEvents, { passive: true });
 
-        updateUI();
-        refreshAutofillStyles();
     </script>
 </body>
 </html>
