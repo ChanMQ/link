@@ -422,7 +422,26 @@
 
             .lang-modal-overlay { position: fixed; inset: 0; background: transparent !important; pointer-events: none; display: block; }
             .lang-modal-overlay.active { pointer-events: none; }
-            .lang-modal { position: absolute; top: 24px; left: calc(50% + 220px); width: 280px; height: 464px; margin: 0; max-width: none; border: 2px solid var(--border-hover); border-radius: var(--radius-elem); box-shadow: 0 20px 40px rgba(0,0,0,0.6); pointer-events: auto; transform: translateY(15px); } /* Небольшое смещение для десктопа */
+
+            /* Строгая фиксация осей X и Y для десктопа */
+            .lang-modal {
+                position: absolute;
+                top: 24px;
+                left: calc(50% + 220px);
+                width: 280px;
+                height: 464px;
+                margin: 0;
+                max-width: none;
+                border: 2px solid var(--border-hover);
+                border-radius: var(--radius-elem);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+                pointer-events: auto;
+                transform: translate(-20px, 0) !important; /* Выезд слева направо */
+            }
+            .lang-modal-overlay.active .lang-modal {
+                transform: translate(0, 0) !important;
+            }
+
             .lang-list { height: calc(100% - 73px); flex-grow: 1; }
             .lang-close-btn { display: none !important; }
         }
@@ -449,6 +468,7 @@
         .lang-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; }
         .lang-modal-overlay.active { opacity: 1; visibility: visible; }
 
+        /* Базовая (Мобильная) анимация по оси Y */
         .lang-modal {
             width: 100%;
             max-width: 340px;
@@ -460,12 +480,12 @@
             overflow: hidden;
             box-shadow: none;
             /* Выезд снизу для мобилок */
-            transform: translateY(100%);
+            transform: translate(0, 100%);
             opacity: 0;
             transition: transform 0.35s var(--ios-ease), opacity 0.3s var(--ios-ease);
         }
         .lang-modal-overlay.active .lang-modal {
-            transform: translateY(0) !important;
+            transform: translate(0, 0) !important;
             opacity: 1;
         }
 
