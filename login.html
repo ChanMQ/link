@@ -92,6 +92,7 @@
 
         body.loading { overflow: hidden; }
 
+        /* Фикс для плавности ресайза */
         body.is-resizing * {
             transition: none !important;
         }
@@ -121,11 +122,9 @@
             will-change: opacity, visibility;
         }
 
-        /* Исключение для прелоадера */
         #preloader.hidden {
-            max-height: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
+            opacity: 0;
+            visibility: hidden;
         }
 
         .lava-spinner {
@@ -225,20 +224,6 @@
             min-height: 42px;
         }
 
-        .auth-form {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            will-change: transform, opacity;
-        }
-
-        /* Анимация всех выпадающих/задвигающихся блоков формы */
-        #userGroup, #emailGroup, #confirmPasswordGroup, #resetInfoBox, #forgotLinkWrap {
-            transition: max-height 0.4s var(--ios-ease), opacity 0.35s var(--ios-ease), margin 0.4s var(--ios-ease), padding 0.4s var(--ios-ease);
-            will-change: max-height, opacity, margin, padding;
-            overflow: hidden; /* Скрываем контент при сужении */
-        }
-
         .reset-info-box {
             background: var(--bg-base);
             border: 1px solid var(--accent);
@@ -249,7 +234,6 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            max-height: 100px;
         }
 
         .reset-info-icon-wrap {
@@ -267,20 +251,19 @@
         .reset-info-text { font-size: 14px; color: var(--text-muted); line-height: 1.4; flex: 1; }
         .reset-info-text span { color: var(--text-main); font-weight: 600; overflow-wrap: anywhere; word-break: break-word; white-space: normal; }
 
+        .auth-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            will-change: transform, opacity;
+        }
+
         .input-group {
             position: relative;
             width: 100%;
-            margin-bottom: 16px;
             --current-border: var(--border);
             --current-label: var(--text-muted);
-        }
-
-        #userGroup, #emailGroup, #confirmPasswordGroup {
-            max-height: 100px;
-        }
-
-        #hsGroup {
-            overflow: visible !important; /* Сервер всегда видимый, чтобы меню выпадало */
         }
 
         .input-group:hover { --current-border: var(--accent-dark); --current-label: var(--accent-dark); }
@@ -365,24 +348,8 @@
         .chevron-icon { pointer-events: none; transition: transform 0.25s var(--ios-ease); will-change: transform; }
         .input-group.open .chevron-icon { transform: rotate(180deg); }
 
-        /* Плавная анимация текста ошибки */
-        .error-text {
-            color: var(--accent);
-            font-size: 13px;
-            margin-top: 0;
-            margin-left: 16px;
-            display: block;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s var(--ios-ease), opacity 0.3s var(--ios-ease), margin-top 0.3s var(--ios-ease);
-            will-change: max-height, opacity, margin-top;
-        }
-        .input-group.invalid .error-text {
-            max-height: 40px;
-            opacity: 1;
-            margin-top: 6px;
-        }
+        .error-text { color: var(--accent); font-size: 13px; margin-top: 6px; margin-left: 16px; display: none; }
+        .input-group.invalid .error-text { display: block; }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -413,7 +380,6 @@
         .dropdown-item small { font-size: 13px; color: var(--text-muted); }
         .dropdown-item:last-child { border-bottom: none; }
         .dropdown-item:hover { background: var(--bg-hover); }
-        .close-dropdown-btn { display: none; }
 
         @media (max-width: 1125px) {
             .dropdown-menu {
@@ -421,51 +387,42 @@
                 top: 0;
                 left: 0;
                 width: 100%;
-                display: flex; /* Сетка Flexbox рендерится плавнее на телефонах */
-                flex-wrap: wrap;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
                 gap: 8px;
-                padding: 0 2px;
+                padding: 12px 2px 4px 2px;
                 margin: 0;
                 border: none;
                 background: transparent;
-                max-height: 0;
-                opacity: 0;
-                visibility: hidden;
-                overflow: hidden;
-                transform: none;
-                pointer-events: none;
-                backface-visibility: hidden;
-                will-change: max-height, opacity, padding;
-                transition: max-height 0.4s var(--ios-ease), opacity 0.3s ease-out, visibility 0.4s, padding 0.4s var(--ios-ease);
-            }
-            .input-group.open .dropdown-menu {
-                max-height: 400px;
+                max-height: none;
                 opacity: 1;
                 visibility: visible;
+                overflow: hidden;
+                transform: none;
+                pointer-events: auto;
+                backface-visibility: hidden;
+            }
+            .input-group.open .dropdown-menu {
+                max-height: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
                 padding: 12px 2px 4px 2px;
                 pointer-events: auto;
             }
             .dropdown-header {
-                width: 100%;
+                grid-column: 1 / -1;
                 padding: 12px 4px 8px;
                 border-bottom: none;
             }
-            .dropdown-item {
-                width: calc(50% - 4px);
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                padding: 12px 8px;
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                background: rgba(255, 255, 255, 0.02);
-                font-size: 14px;
-                font-weight: 500;
-            }
-            .dropdown-item:hover { border-color: var(--accent); background: var(--bg-hover); }
+            .dropdown-item { flex-direction: row; align-items: center; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255, 255, 255, 0.02); font-size: 14px; font-weight: 500; }
+            .dropdown-item:hover, .dropdown-item:active { border-color: var(--border); background: var(--bg-hover); }
             .dropdown-item small { display: none; }
             .dropdown-item:last-child { border-bottom: 1px solid var(--border); }
+
+            #hsGroup .input-icon-btn { display: none !important; }
+            #hsGroup .input-field.has-icon { padding-right: 16px !important; }
+
             .lang-modal-overlay { align-items: flex-end !important; }
             .lang-modal { max-width: 100% !important; border-radius: 20px 20px 0 0 !important; border-bottom: none !important; border-left: none !important; border-right: none !important; }
             .input-group:hover { --current-border: var(--border); --current-label: var(--text-muted); }
@@ -475,16 +432,6 @@
             .primary-btn:active { background: var(--accent-hover); transform: scale(0.98); }
             .secondary-btn:hover { background: var(--accent-soft); }
             .secondary-btn:active { background: rgba(218, 74, 68, 0.18); transform: scale(0.98); }
-            .close-dropdown-btn {
-                display: flex !important;
-                width: 100%;
-                color: #ffffff !important;
-                border-color: var(--accent) !important;
-                background: var(--accent) !important;
-                gap: 6px;
-                font-weight: 600;
-            }
-            .close-dropdown-btn:active { background: var(--accent-hover) !important; }
         }
 
         @media (min-width: 1126px) {
@@ -500,18 +447,10 @@
             .lang-close-btn { display: none !important; }
         }
 
-        .forgot-pass-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: -4px;
-            margin-bottom: 4px;
-            max-height: 30px;
-        }
+        .forgot-pass-container { display: flex; justify-content: flex-end; margin-top: -4px; margin-bottom: 4px; }
         .forgot-pass-link { color: var(--accent); font-size: 14px; text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
         .forgot-pass-link:hover { opacity: 0.8; }
-
-        .actions-wrapper { display: flex; flex-direction: column; gap: 12px; margin-top: 0; width: 100%; margin-bottom: 0 !important; }
-
+        .actions-wrapper { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; width: 100%; }
         .primary-btn, .secondary-btn { width: 100%; height: 54px; border: none; border-radius: var(--radius-elem); font-family: var(--font-family); font-size: 15px; font-weight: 600; letter-spacing: 0.02em; cursor: pointer; transition: background 0.2s ease, transform 0.1s ease; display: flex; align-items: center; justify-content: center; text-transform: uppercase; will-change: transform, background-color; }
         .btn-icon { display: flex; align-items: center; justify-content: center; margin-right: 8px; }
         .btn-icon svg { width: 20px; height: 20px; fill: currentColor; }
@@ -522,23 +461,8 @@
         .secondary-btn:hover { background: rgba(218, 74, 68, 0.18); }
         .secondary-btn:active { transform: scale(0.98); }
         .spinner { display: none; width: 22px; height: 22px; border: 2px solid rgba(255, 255, 255, 0.3); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.8s linear infinite; }
-
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Главная магия: элементы не пропадают мгновенно, а плавно схлопываются */
-        .hidden {
-            max-height: 0 !important;
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            opacity: 0 !important;
-            border-width: 0 !important;
-            box-shadow: none !important;
-            pointer-events: none !important;
-            visibility: hidden !important;
-        }
-
+        .hidden { display: none !important; }
         .lang-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; will-change: opacity, visibility; }
         .lang-modal-overlay.active { opacity: 1; visibility: visible; }
         .lang-modal { width: 100%; max-width: 340px; background: var(--bg-surface); border: 2px solid var(--border-hover); border-radius: var(--radius-elem); display: flex; flex-direction: column; overflow: hidden; box-shadow: none; transform: translate(0, 100%); opacity: 0; transition: transform 0.35s var(--ios-ease), opacity 0.3s var(--ios-ease); will-change: transform, opacity; }
@@ -641,14 +565,6 @@
                     <div class="dropdown-item" onclick="selectServer('mozilla.org')">mozilla.org<small>Mozilla Foundation</small></div>
                     <div class="dropdown-item" onclick="selectServer('kde.org')">kde.org<small>KDE Community</small></div>
                     <div class="dropdown-item" onclick="selectServer('tchncs.de')">tchncs.de<small>Tech & Privacy</small></div>
-                    <div class="dropdown-item" onclick="selectServer('ubuntu.com')">ubuntu.com<small>Ubuntu Community</small></div>
-
-                    <div class="dropdown-item close-dropdown-btn" onclick="closeDropdown(event)">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                        <span id="txtCloseServer">Close</span>
-                    </div>
                 </div>
                 <div class="error-text"></div>
             </div>
@@ -884,7 +800,11 @@
             document.getElementById('lblSearchPlace').textContent = text.searchPlace;
             document.getElementById('lblHomeserver').textContent = text.lblHomeserver;
             document.getElementById('txtPopularServers').textContent = text.txtPopularServers;
-            document.getElementById('txtCloseServer').textContent = text.txtCloseServer;
+
+            /* Кнопка закрыть удалена, поэтому убираем обновление текста для неё, чтобы не было ошибки */
+            const txtClose = document.getElementById('txtCloseServer');
+            if(txtClose) txtClose.textContent = text.txtCloseServer;
+
             document.getElementById('lblEmail').textContent = text.lblEmail;
             document.getElementById('lblConfirm').textContent = text.lblConfirm;
             document.getElementById('lnkForgot').textContent = text.lnkForgot;
@@ -984,22 +904,30 @@
 
             if (skipAnimation) { applyModeChanges(mode); return; }
 
+            const formEl = document.getElementById('authForm');
             const subtitle = document.getElementById('headerSubtitle');
 
-            // Анимируем только текст, блоки раздвигаются/сдвигаются сами благодаря CSS
+            formEl.style.transition = 'opacity 0.15s var(--ios-ease), transform 0.15s var(--ios-ease)';
             subtitle.style.transition = 'opacity 0.15s var(--ios-ease), transform 0.15s var(--ios-ease)';
+            formEl.style.opacity = '0';
+            formEl.style.transform = 'translateX(15px)';
             subtitle.style.opacity = '0';
-            subtitle.style.transform = 'translateX(10px)';
+            subtitle.style.transform = 'translateX(15px)';
 
             setTimeout(() => {
-                applyModeChanges(mode); // Вызов переключит классы hidden, CSS плавно изменит высоту
+                applyModeChanges(mode);
 
+                formEl.style.transition = 'none';
                 subtitle.style.transition = 'none';
-                subtitle.style.transform = 'translateX(-10px)';
+                formEl.style.transform = 'translateX(-15px)';
+                subtitle.style.transform = 'translateX(-15px)';
 
-                void subtitle.offsetWidth;
+                void formEl.offsetWidth;
 
+                formEl.style.transition = 'opacity 0.25s var(--ios-ease), transform 0.25s var(--ios-ease)';
                 subtitle.style.transition = 'opacity 0.25s var(--ios-ease), transform 0.25s var(--ios-ease)';
+                formEl.style.opacity = '1';
+                formEl.style.transform = 'translateX(0)';
                 subtitle.style.opacity = '1';
                 subtitle.style.transform = 'translateX(0)';
             }, 150);
@@ -1288,6 +1216,7 @@
             window.visualViewport.addEventListener('scroll', handleViewportChange);
         }
 
+        // Скрипт для предотвращения прыжков интерфейса при ресайзе окна ПК
         let resizeTimer;
         window.addEventListener('resize', () => {
             document.body.classList.add('is-resizing');
