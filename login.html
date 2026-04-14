@@ -71,19 +71,23 @@
             color: var(--text-main);
             font-family: var(--font-family);
             color-scheme: dark;
-            min-height: 100vh;
+            height: 100dvh; /* Защита от прыгающей адресной строки на iOS/Android */
             width: 100%;
             margin: 0;
             padding: 0;
+            overflow: hidden; /* Запрещаем скролл самого документа */
         }
 
         body {
             display: flex;
             justify-content: center;
             overflow-x: hidden;
+            overflow-y: auto; /* Разрешаем внутренний скролл */
             -webkit-font-smoothing: antialiased;
-            position: relative;
+            position: fixed; /* Фиксируем слой для мобилок */
+            inset: 0;
             user-select: none;
+            -webkit-overflow-scrolling: touch;
         }
 
         body.loading { overflow: hidden; }
@@ -345,9 +349,18 @@
         .dropdown-item small { font-size: 13px; color: var(--text-muted); }
         .dropdown-item:last-child { border-bottom: none; }
         .dropdown-item:hover { background: var(--bg-hover); }
+        .close-dropdown-btn { display: none; } /* Скрыто на десктопе */
 
         @media (max-width: 1125px) {
-            .dropdown-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 16px 12px; }
+            .dropdown-menu {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                padding: 0 12px 16px 12px;
+                /* Расширяем чтобы перекрыть края полей снизу */
+                width: calc(100% + 12px);
+                left: -6px;
+            }
             .dropdown-header { grid-column: 1 / -1; padding: 16px 4px 8px; border-bottom: none; }
             .dropdown-item { flex-direction: row; align-items: center; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255, 255, 255, 0.02); font-size: 14px; font-weight: 500; }
             .dropdown-item:hover { border-color: var(--accent); background: var(--bg-hover); }
@@ -356,6 +369,28 @@
 
             .lang-modal-overlay { align-items: flex-end !important; }
             .lang-modal { max-width: 100% !important; border-radius: 20px 20px 0 0 !important; border-bottom: none !important; border-left: none !important; border-right: none !important; }
+
+            /* Убираем тёмно-красный ховер при тапе на телефоне */
+            .input-group:hover { --current-border: var(--border); --current-label: var(--text-muted); }
+            .input-group:focus-within, .input-group.open { --current-border: var(--accent); --current-label: var(--accent); }
+            .input-group.invalid:hover { --current-border: var(--accent) !important; --current-label: var(--accent) !important; }
+
+            /* Убираем ховер с кнопок, оставляем только реакцию на нажатие */
+            .primary-btn:hover { background: var(--accent); }
+            .primary-btn:active { background: var(--accent-hover); transform: scale(0.98); }
+            .secondary-btn:hover { background: var(--accent-soft); }
+            .secondary-btn:active { background: rgba(218, 74, 68, 0.18); transform: scale(0.98); }
+
+            /* Мобильная кнопка закрыть в сетке серверов */
+            .close-dropdown-btn {
+                display: flex !important;
+                color: #ffffff !important;
+                border-color: var(--accent) !important;
+                background: var(--accent) !important;
+                gap: 6px;
+                font-weight: 600;
+            }
+            .close-dropdown-btn:active { background: var(--accent-hover) !important; }
         }
 
         @media (min-width: 1126px) {
@@ -403,7 +438,6 @@
             flex-direction: column;
             overflow: hidden;
             box-shadow: none;
-            /* Выплывает слева */
             transform: translateX(-20px);
             opacity: 0;
             transition: transform 0.25s var(--ios-ease), opacity 0.25s var(--ios-ease);
@@ -514,6 +548,13 @@
                     <div class="dropdown-item" onclick="selectServer('kde.org')">kde.org<small>KDE Community</small></div>
                     <div class="dropdown-item" onclick="selectServer('tchncs.de')">tchncs.de<small>Tech & Privacy</small></div>
                     <div class="dropdown-item" onclick="selectServer('ubuntu.com')">ubuntu.com<small>Ubuntu Community</small></div>
+
+                    <div class="dropdown-item close-dropdown-btn" onclick="closeDropdown(event)">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <span id="txtCloseServer">Закрыть</span>
+                    </div>
                 </div>
                 <div class="error-text"></div>
             </div>
@@ -616,7 +657,7 @@
                 subLogin: "Укажите свой homeserver и введите данные для входа.",
                 subRegister: "Укажите сервер и придумайте данные для нового аккаунта.",
                 subReset: "Восстановление доступа к аккаунту.",
-                lblHomeserver: "Homeserver (напр. matrix.org)", txtPopularServers: "Популярные серверы",
+                lblHomeserver: "Homeserver (напр. matrix.org)", txtPopularServers: "Популярные серверы", txtCloseServer: "Закрыть",
                 lblUsernameLogin: "Логин или @user:server", lblUsernameReg: "Логин",
                 lblEmail: "Email", lblPasswordLogin: "Пароль", lblPasswordReg: "Придумайте пароль",
                 lblPasswordReset: "Новый пароль", lblConfirm: "Подтвердите пароль",
@@ -631,7 +672,7 @@
                 subLogin: "Enter your homeserver and login details.",
                 subRegister: "Enter a server and create details for your new account.",
                 subReset: "Restore access to your account.",
-                lblHomeserver: "Homeserver (e.g. matrix.org)", txtPopularServers: "Popular Servers",
+                lblHomeserver: "Homeserver (e.g. matrix.org)", txtPopularServers: "Popular Servers", txtCloseServer: "Close",
                 lblUsernameLogin: "Username or @user:server", lblUsernameReg: "Username",
                 lblEmail: "Email", lblPasswordLogin: "Password", lblPasswordReg: "Create Password",
                 lblPasswordReset: "New Password", lblConfirm: "Confirm Password",
@@ -722,6 +763,7 @@
             document.getElementById('lblSearchPlace').textContent = text.searchPlace;
             document.getElementById('lblHomeserver').textContent = text.lblHomeserver;
             document.getElementById('txtPopularServers').textContent = text.txtPopularServers;
+            document.getElementById('txtCloseServer').textContent = text.txtCloseServer;
             document.getElementById('lblEmail').textContent = text.lblEmail;
             document.getElementById('lblConfirm').textContent = text.lblConfirm;
             document.getElementById('lnkForgot').textContent = text.lnkForgot;
@@ -806,7 +848,6 @@
             const formEl = document.getElementById('authForm');
             const subtitle = document.getElementById('headerSubtitle');
 
-            // 1. Анимация ухода вправо
             formEl.style.transition = 'opacity 0.15s var(--ios-ease), transform 0.15s var(--ios-ease)';
             subtitle.style.transition = 'opacity 0.15s var(--ios-ease), transform 0.15s var(--ios-ease)';
             formEl.style.opacity = '0';
@@ -815,18 +856,15 @@
             subtitle.style.transform = 'translateX(15px)';
 
             setTimeout(() => {
-                // Изменение структуры
                 applyModeChanges(mode);
 
-                // 2. Перенос влево без анимации
                 formEl.style.transition = 'none';
                 subtitle.style.transition = 'none';
                 formEl.style.transform = 'translateX(-15px)';
                 subtitle.style.transform = 'translateX(-15px)';
 
-                void formEl.offsetWidth; // Reflow (перерисовка)
+                void formEl.offsetWidth; // Reflow
 
-                // 3. Выезд слева направо в центр
                 formEl.style.transition = 'opacity 0.25s var(--ios-ease), transform 0.25s var(--ios-ease)';
                 subtitle.style.transition = 'opacity 0.25s var(--ios-ease), transform 0.25s var(--ios-ease)';
                 formEl.style.opacity = '1';
@@ -861,11 +899,14 @@
         const homeserverInput = document.getElementById('homeserver');
 
         function openDropdown() { hsGroup.classList.add('open'); }
-        function closeDropdown() { hsGroup.classList.remove('open'); }
+        function closeDropdown(e) {
+            if(e) e.stopPropagation();
+            hsGroup.classList.remove('open');
+        }
 
         function toggleDropdown(e) {
             e.stopPropagation();
-            if (hsGroup.classList.contains('open')) closeDropdown();
+            if (hsGroup.classList.contains('open')) closeDropdown(e);
             else { openDropdown(); homeserverInput.focus(); }
         }
 
@@ -884,7 +925,7 @@
         }
 
         document.addEventListener('click', (e) => {
-            if (!hsGroup.contains(e.target)) closeDropdown();
+            if (!hsGroup.contains(e.target)) closeDropdown(e);
         });
 
         function updateResetText() {
@@ -990,6 +1031,33 @@
                 input.style.backgroundImage = 'none';
             });
         }
+
+        // Обработка перехода по Enter (на следующее поле или сабмит)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+
+                // Если открыто меню серверов, закрываем его (без прерывания логики перехода)
+                if (hsGroup && hsGroup.classList.contains('open')) {
+                    closeDropdown();
+                }
+
+                if (e.target.tagName === 'INPUT' && !e.target.classList.contains('search-field')) {
+                    // Ищем все видимые поля
+                    const visibleInputs = Array.from(document.querySelectorAll('.input-field:not(.search-field)')).filter(el => {
+                        const group = el.closest('.input-group');
+                        return group && !group.classList.contains('hidden') && el.offsetParent !== null;
+                    });
+
+                    const index = visibleInputs.indexOf(e.target);
+                    // Переводим фокус на следующее поле, если оно есть, и предотвращаем досрочную отправку
+                    if (index > -1 && index < visibleInputs.length - 1) {
+                        e.preventDefault();
+                        visibleInputs[index + 1].focus();
+                    }
+                    // Если это последнее поле, фокус не переводится, срабатывает дефолтный submit
+                }
+            }
+        });
 
         window.addEventListener('load', () => { refreshAutofillStyles(); setTimeout(refreshAutofillStyles, 0); setTimeout(refreshAutofillStyles, 120); setTimeout(refreshAutofillStyles, 300); });
         window.addEventListener('pageshow', () => { refreshAutofillStyles(); setTimeout(refreshAutofillStyles, 0); setTimeout(refreshAutofillStyles, 120); setTimeout(refreshAutofillStyles, 300); });
