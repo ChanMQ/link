@@ -92,6 +92,9 @@
 
         body.loading { overflow: hidden; }
 
+        /* Убираем стандартную обводку фокуса на всех кнопках для ПК */
+        button:focus, a:focus { outline: none !important; }
+
         input {
             user-select: auto;
             color-scheme: dark;
@@ -141,7 +144,8 @@
         .auth-container {
             width: 100%;
             max-width: 400px;
-            padding: 8vh 24px 100px; /* Увеличен нижний отступ, чтобы кнопка не прилипала к краю */
+            /* Использование dvh обеспечивает отступ, учитывающий динамическую строку браузера */
+            padding: 8dvh 24px 15dvh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1037,7 +1041,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
 
-                // Если открыто меню серверов, закрываем его (без прерывания логики перехода)
+                // Если открыто меню серверов, закрываем его
                 if (hsGroup && hsGroup.classList.contains('open')) {
                     closeDropdown();
                 }
@@ -1050,12 +1054,18 @@
                     });
 
                     const index = visibleInputs.indexOf(e.target);
-                    // Переводим фокус на следующее поле, если оно есть, и предотвращаем досрочную отправку
-                    if (index > -1 && index < visibleInputs.length - 1) {
-                        e.preventDefault();
-                        visibleInputs[index + 1].focus();
+                    if (index > -1) {
+                        // Если есть следующее поле — переводим фокус
+                        if (index < visibleInputs.length - 1) {
+                            e.preventDefault();
+                            visibleInputs[index + 1].focus();
+                        } else {
+                            // Если это последнее поле, скрываем клавиатуру и сразу запускаем отправку
+                            e.preventDefault();
+                            e.target.blur();
+                            document.getElementById('primaryBtn').click();
+                        }
                     }
-                    // Если это последнее поле, фокус не переводится, срабатывает дефолтный submit
                 }
             }
         });
