@@ -391,7 +391,7 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
-                padding: 0 2px 4px 2px;
+                padding: 0 2px;
                 margin: 0;
                 border: none;
                 background: transparent;
@@ -399,20 +399,20 @@
                 opacity: 0;
                 visibility: hidden;
                 overflow: hidden;
-                transform: translate3d(0, -8px, 0);
+                transform: none;
                 pointer-events: none;
-                contain: layout paint;
                 backface-visibility: hidden;
-                will-change: max-height, opacity, transform;
-                transition: max-height 0.32s var(--ios-ease), opacity 0.18s ease-out, transform 0.28s var(--ios-ease), visibility 0.32s;
+                will-change: max-height, opacity;
+                transition: max-height 0.35s var(--ios-ease), opacity 0.25s ease-out, visibility 0.35s, padding 0.35s var(--ios-ease);
             }
             .input-group.open .dropdown-menu {
-                max-height: 320px;
+                max-height: 380px;
                 opacity: 1;
                 visibility: visible;
-                transform: translate3d(0, 0, 0);
+                transform: none;
+                padding: 12px 2px 4px 2px;
                 pointer-events: auto;
-                transition: max-height 0.32s var(--ios-ease), opacity 0.22s ease-out, transform 0.28s var(--ios-ease), visibility 0.32s;
+                transition: max-height 0.35s var(--ios-ease), opacity 0.3s ease-out, visibility 0.35s, padding 0.35s var(--ios-ease);
             }
             .dropdown-header {
                 grid-column: 1 / -1;
