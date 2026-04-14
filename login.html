@@ -416,7 +416,7 @@
                 border-bottom: none;
             }
             .dropdown-item { flex-direction: row; align-items: center; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255, 255, 255, 0.02); font-size: 14px; font-weight: 500; }
-            .dropdown-item:hover, .dropdown-item:active { border-color: var(--border); background: var(--bg-hover); }
+            .dropdown-item:hover, .dropdown-item:active { border-color: var(--accent); background: rgba(255, 255, 255, 0.02); }
             .dropdown-item small { display: none; }
             .dropdown-item:last-child { border-bottom: 1px solid var(--border); }
 
@@ -988,24 +988,21 @@
             const scrollToField = () => {
                 const rect = input.getBoundingClientRect();
                 const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-                const visibleTop = window.visualViewport ? window.visualViewport.offsetTop : 0;
-                const topPadding = 24;
-                const bottomPadding = 28;
-                const isAbove = rect.top < visibleTop + topPadding;
-                const isBelow = rect.bottom > visibleTop + viewportHeight - bottomPadding;
 
-                if (isAbove || isBelow) {
+                // На мобилках (особенно с клавиатурой) лучше центрировать надежнее
+                // Если элемент не находится в комфортной видимой зоне (ближе к краям):
+                if (rect.top < 80 || rect.bottom > viewportHeight - 80) {
                     input.scrollIntoView({
-                        behavior,
-                        block: 'center',
-                        inline: 'nearest'
+                        behavior: behavior,
+                        block: 'center'
                     });
                 }
             };
 
+            // Делаем скролл с запасом по времени, чтобы дать клавиатуре полностью открыться/изменить вьюпорт
             requestAnimationFrame(scrollToField);
-            setTimeout(scrollToField, 80);
-            setTimeout(scrollToField, 220);
+            setTimeout(scrollToField, 150);
+            setTimeout(scrollToField, 350);
         }
 
         function focusNextField(currentInput, behavior = 'smooth') {
@@ -1031,7 +1028,10 @@
             clearError(homeserverInput);
             closeDropdown();
             updateResetText();
-            focusNextField(homeserverInput);
+            // На мобильном не прыгаем автоматически, ждем пока пользователь нажмет сам
+            if (window.innerWidth > 1125) {
+                focusNextField(homeserverInput);
+            }
         }
 
         document.addEventListener('click', (e) => {
@@ -1174,12 +1174,10 @@
                 }
 
                 if (e.target.tagName === 'INPUT' && !e.target.classList.contains('search-field')) {
+                    e.preventDefault();
                     const moved = focusNextField(e.target);
 
-                    if (moved) {
-                        e.preventDefault();
-                    } else {
-                        e.preventDefault();
+                    if (!moved) {
                         e.target.blur();
                         document.getElementById('primaryBtn').click();
                     }
