@@ -144,8 +144,7 @@
         .auth-container {
             width: 100%;
             max-width: 400px;
-            /* Использование dvh обеспечивает отступ, учитывающий динамическую строку браузера */
-            padding: 8dvh 24px 15dvh;
+            padding: 8dvh 24px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -153,6 +152,16 @@
             z-index: 1;
             animation: fadeUp 0.6s var(--ios-ease) forwards;
             opacity: 0;
+        }
+
+        /* Гарантированный пустой блок снизу формы для скролла на мобильных */
+        .auth-container::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 12dvh;
+            min-height: 80px;
+            flex-shrink: 0;
         }
 
         @keyframes fadeUp {
@@ -272,11 +281,19 @@
 
         .input-field.has-icon { padding-right: 48px; }
 
+        /* Специальное правило для автозаполнения паролей, чтобы точки не ломались */
+        input[type="password"]:-webkit-autofill,
+        input[type="password"]:-webkit-autofill:hover,
+        input[type="password"]:-webkit-autofill:focus,
+        input[type="password"]:-webkit-autofill:active {
+            font-family: system-ui, -apple-system, sans-serif !important;
+            letter-spacing: 3px !important;
+        }
+
         input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
             -webkit-text-fill-color: var(--text-main) !important;
             color: var(--text-main) !important;
             caret-color: var(--accent) !important;
-            font-family: var(--font-family) !important;
             text-shadow: 0 0 0 var(--text-main) !important;
             border: 1px solid var(--current-border) !important;
             -webkit-box-shadow: 0 0 0 1000px var(--bg-base) inset, 0 0 0 1px var(--current-border) !important;
@@ -783,7 +800,6 @@
         }
 
         function toggleMainMode() {
-            document.querySelectorAll('.input-group.invalid').forEach(el => el.classList.remove('invalid'));
             if (currentMode === 'reset' || currentMode === 'register') setMode('login');
             else setMode('register');
         }
@@ -848,6 +864,28 @@
         // --- ПЛАВНАЯ АНИМАЦИЯ ПЕРЕКЛЮЧЕНИЯ РЕЖИМОВ ---
         function setMode(mode, skipAnimation = false) {
             if (currentMode === mode && !skipAnimation) return;
+
+            // Если это не просто смена языка (skipAnimation), то очищаем введённые данные
+            if (!skipAnimation) {
+                document.querySelectorAll('.input-group.invalid').forEach(el => el.classList.remove('invalid'));
+
+                ['username', 'email', 'password', 'confirmPassword'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+
+                // Возвращаем иконки "глазика" в закрытое состояние, если они были открыты
+                ['password', 'confirmPassword'].forEach(id => {
+                    const inp = document.getElementById(id);
+                    if (inp && inp.type === 'text') {
+                        const btn = inp.parentElement.querySelector('.input-icon-btn');
+                        if (btn) togglePasswordVisibility(id, btn);
+                    }
+                });
+
+                setTimeout(refreshAutofillStyles, 50);
+            }
+
             if (skipAnimation) { applyModeChanges(mode); return; }
 
             const formEl = document.getElementById('authForm');
@@ -942,9 +980,13 @@
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
                 input.type = 'text';
+                input.style.fontFamily = 'var(--font-family)';
+                input.style.letterSpacing = 'normal';
                 btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
             } else {
                 input.type = 'password';
+                input.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+                input.style.letterSpacing = '3px';
                 btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"></path></svg>`;
             }
         }
@@ -1031,9 +1073,17 @@
                 input.style.color = textColor;
                 input.style.webkitTextFillColor = textColor;
                 input.style.textShadow = `0 0 0 ${textColor}`;
-                input.style.fontFamily = fontFamily;
                 input.style.backgroundColor = bgColor;
                 input.style.backgroundImage = 'none';
+
+                // Нормализация системных точек для пароля
+                if (input.type === 'password') {
+                    input.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+                    input.style.letterSpacing = '3px';
+                } else {
+                    input.style.fontFamily = fontFamily;
+                    input.style.letterSpacing = 'normal';
+                }
             });
         }
 
