@@ -385,18 +385,26 @@
                 width: 100%;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                padding: 0 2px; /* Добавлено: защита от среза боковых рамок */
+                column-gap: 8px;
+                row-gap: 0;
+                padding: 0 2px;
                 margin-top: 0;
                 border: none;
                 background: transparent;
                 max-height: 0;
-                transition: max-height 0.3s var(--ios-ease), opacity 0.2s var(--ios-ease), transform 0.2s var(--ios-ease), margin-top 0.3s var(--ios-ease), padding 0.3s var(--ios-ease);
+                transform: none !important;
+                opacity: 0;
+                visibility: hidden;
+                transition: max-height 0.4s var(--ios-ease), margin-top 0.4s var(--ios-ease), padding-bottom 0.4s var(--ios-ease), opacity 0.3s ease, row-gap 0.4s var(--ios-ease), visibility 0.4s;
             }
             .input-group.open .dropdown-menu {
                 max-height: 400px;
                 margin-top: 12px;
-                padding-bottom: 4px; /* Добавлено: защита от среза нижних рамок */
+                padding-bottom: 4px;
+                row-gap: 8px;
+                opacity: 1;
+                visibility: visible;
+                transform: none !important;
             }
             .dropdown-header { grid-column: 1 / -1; padding: 8px 4px 8px; border-bottom: none; }
             .dropdown-item { flex-direction: row; align-items: center; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255, 255, 255, 0.02); font-size: 14px; font-weight: 500; }
