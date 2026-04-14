@@ -51,7 +51,7 @@
             --border: #2c2c30;
             --border-hover: #3a3a40;
 
-            --radius-elem: 14px;
+            --radius-elem: 16px;
             --ios-ease: cubic-bezier(0.3, 0, 0.1, 1);
             --font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
@@ -390,14 +390,14 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
-                padding: 12px 2px 4px 2px;
+                padding: 12px 4px 10px 4px;
                 margin: 0;
                 border: none;
                 background: transparent;
                 max-height: none;
                 opacity: 1;
                 visibility: visible;
-                overflow: hidden;
+                overflow: visible;
                 transform: none;
                 pointer-events: auto;
                 backface-visibility: hidden;
@@ -407,7 +407,7 @@
                 opacity: 1;
                 visibility: visible;
                 transform: none;
-                padding: 12px 2px 4px 2px;
+                padding: 12px 4px 10px 4px;
                 pointer-events: auto;
             }
             .dropdown-header {
@@ -415,16 +415,32 @@
                 padding: 12px 4px 8px;
                 border-bottom: none;
             }
-            .dropdown-item { flex-direction: row; align-items: center; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255, 255, 255, 0.02); font-size: 14px; font-weight: 500; }
-            .dropdown-item:hover, .dropdown-item:active { border-color: var(--accent); background: rgba(255, 255, 255, 0.02); }
+            .dropdown-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 12px 8px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.02);
+                font-size: 14px;
+                font-weight: 500;
+            }
             .dropdown-item small { display: none; }
             .dropdown-item:last-child { border-bottom: 1px solid var(--border); }
+
+            /* Важное исправление: теперь красная рамка будет всегда прорисовываться на всех элементах */
+            .dropdown-item:hover, .dropdown-item:active {
+                border-color: var(--accent) !important;
+                background: rgba(255, 255, 255, 0.02);
+            }
 
             #hsGroup .input-icon-btn { display: none !important; }
             #hsGroup .input-field.has-icon { padding-right: 16px !important; }
 
             .lang-modal-overlay { align-items: flex-end !important; }
-            .lang-modal { max-width: 100% !important; border-radius: 20px 20px 0 0 !important; border-bottom: none !important; border-left: none !important; border-right: none !important; }
+            .lang-modal { max-width: 100% !important; border-radius: 24px 24px 0 0 !important; border-bottom: none !important; border-left: none !important; border-right: none !important; }
             .input-group:hover { --current-border: var(--border); --current-label: var(--text-muted); }
             .input-group:focus-within, .input-group.open { --current-border: var(--accent); --current-label: var(--accent); }
             .input-group.invalid:hover { --current-border: var(--accent) !important; --current-label: var(--accent) !important; }
