@@ -92,6 +92,11 @@
 
         body.loading { overflow: hidden; }
 
+        /* Фикс для плавности ресайза */
+        body.is-resizing * {
+            transition: none !important;
+        }
+
         button:focus, a:focus { outline: none !important; }
 
         input {
@@ -385,30 +390,32 @@
                 width: 100%;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 8px; /* Зафиксировали gap, чтобы не было тормозов */
-                padding: 0 2px;
-                margin-top: 0;
+                gap: 8px;
+                /* Паддинги статичны, чтобы не грузить процессор при анимации */
+                padding: 0 2px 4px 2px;
+                margin: 0;
                 border: none;
                 background: transparent;
                 max-height: 0;
-                transform: none !important;
                 opacity: 0;
                 visibility: hidden;
                 overflow: hidden;
-                /* Очень плавная кривая для закрытия (ускоряется в начале, замедляется в конце) */
-                transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-out, padding-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+                transform: none !important;
+                /* Очень плавная кривая высоты, только 2 свойства */
+                transition: max-height 0.4s var(--ios-ease), opacity 0.2s ease-out, visibility 0.4s;
             }
             .input-group.open .dropdown-menu {
-                /* Ограничили макс-высоту, чтобы закрытие начиналось мгновенно */
                 max-height: 250px;
-                margin-top: 12px;
-                padding-bottom: 4px;
                 opacity: 1;
                 visibility: visible;
-                /* Выпрыгивающая плавная кривая для открытия */
-                transition: max-height 0.4s cubic-bezier(0.1, 0.9, 0.2, 1), margin-top 0.4s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.3s ease-in, padding-bottom 0.4s cubic-bezier(0.1, 0.9, 0.2, 1), visibility 0.4s;
+                transition: max-height 0.4s var(--ios-ease), opacity 0.3s ease-in 0.05s, visibility 0.4s;
             }
-            .dropdown-header { grid-column: 1 / -1; padding: 8px 4px 8px; border-bottom: none; }
+            .dropdown-header {
+                grid-column: 1 / -1;
+                /* Заменяем margin-top контейнера внутренним отступом */
+                padding: 12px 4px 8px;
+                border-bottom: none;
+            }
             .dropdown-item { flex-direction: row; align-items: center; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255, 255, 255, 0.02); font-size: 14px; font-weight: 500; }
             .dropdown-item:hover { border-color: var(--accent); background: var(--bg-hover); }
             .dropdown-item small { display: none; }
@@ -1150,6 +1157,16 @@
         document.addEventListener('focusin', handleInputEvents, { passive: true });
         document.addEventListener('input', handleInputEvents, { passive: true });
         document.addEventListener('change', handleInputEvents, { passive: true });
+
+        // Скрипт для предотвращения прыжков интерфейса при ресайзе окна ПК
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            document.body.classList.add('is-resizing');
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                document.body.classList.remove('is-resizing');
+            }, 100);
+        });
 
     </script>
 </body>
