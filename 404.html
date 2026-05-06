@@ -1,16 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="page-title">Redirect to Telegram - Ficus Bot</title>
+  <title>Ficus Bot</title>
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    /* Базовые настройки */
+    :root {
+      --bg-color: #0c0d0c;
+      --card-bg: #151715;
+      --text-main: #f0fdf4;
+      --text-muted: #8e958e;
+      --accent-green: #4ade80;
+      --error-red: #fb7185;
+      --btn-gray: #242824;
+      --btn-gray-hover: #303630;
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -18,377 +33,340 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #030303; /* Максимально глубокий черный */
-      color: #ffffff;
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      text-align: center;
       padding: 24px;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      position: relative;
-      overflow: hidden;
     }
 
-    /* ФОНОВЫЙ ПАТТЕРН (Дудлы в стиле TG: Фикусы и Самолётики) прямо в SVG */
-    .background-pattern {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .ficus-card {
       width: 100%;
-      height: 100%;
-      z-index: -1;
-      background-color: #030303;
-      background-image: url("data:image/svg+xml,%3Csvg width='600' height='600' viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%232a3d2a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Ряд 1 --%3E%3Cg transform='translate(60,60) rotate(-12)'%3E%3Cpath d='M -12,0 L 12,0 L 8,15 L -8,15 Z' fill='%230d140d'/%3E%3Cpath d='M -8,0 C -8,-30 8,-30 8,0 Z' fill='%230d140d'/%3E%3Cpath d='M -8,-15 C -15,-15 -20,-25 -10,-25 C -5,-25 -5,-20 -5,-15 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-25 L 0,0 M -4,-15 L -4,0 M 4,-15 L 4,0' fill='none'/%3E%3C/g%3E%3Cg transform='translate(180,50) rotate(25)'%3E%3Cpath d='M -15,-10 L 15,0 L -15,10 L -5,0 Z' fill='%230d140d'/%3E%3Cpath d='M -5,0 L 5,5 L 15,0' fill='none'/%3E%3Cpath d='M -25,5 C -20,10 -15,5 -15,-10' fill='none' stroke-dasharray='2 3'/%3E%3C/g%3E%3Cg transform='translate(300,70) rotate(-15)'%3E%3Cpath d='M -15,5 C -20,-5 -15,-15 0,-15 C 15,-15 20,-5 15,5 C 10,15 -10,15 -15,5 Z' fill='%230d140d'/%3E%3Cpath d='M -10,-10 L -12,-20 L -2,-13 Z' fill='%230d140d'/%3E%3Cpath d='M 10,-10 L 12,-20 L 2,-13 Z' fill='%230d140d'/%3E%3Cpath d='M -15,5 C -25,10 -15,20 0,15 C 10,10 5,0 5,0' fill='none'/%3E%3Cpath d='M -5,-5 L -2,-2 L 1,-5' fill='none'/%3E%3C/g%3E%3Cg transform='translate(420,50) rotate(15)'%3E%3Cpath d='M -12,0 L 12,0 L 8,20 L -8,20 Z' fill='%230d140d'/%3E%3Cpath d='M 0,0 L 0,-40' fill='none'/%3E%3Cpath d='M 0,-10 C -15,-10 -20,-20 -5,-25 C 0,-20 0,-15 0,-10 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-20 C 15,-20 20,-30 5,-35 C 0,-30 0,-25 0,-20 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-30 C -15,-30 -20,-40 -5,-45 C 0,-40 0,-35 0,-30 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-40 C 10,-50 0,-55 -5,-45 C -2,-42 0,-42 0,-40 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(540,60) rotate(-20)'%3E%3Cpath d='M -15,-10 L 5,-15 L 15,0 L -5,5 Z' fill='%230d140d'/%3E%3Cpath d='M -15,-10 L -15,0 L -5,5 L 15,0' fill='none'/%3E%3Cpath d='M -5,-5 L 5,-8 M -3,-1 L 7,-4' fill='none' stroke-width='1'/%3E%3C/g%3E%3C!-- Ряд 2 --%3E%3Cg transform='translate(100,160) rotate(15)'%3E%3Cpath d='M -5,0 L -5,25 L 5,25 L 5,0 Z' fill='%230d140d'/%3E%3Cpath d='M -25,0 C -30,-15 -20,-25 -15,-25 C -20,-45 0,-50 10,-40 C 20,-50 35,-30 25,-15 C 35,-5 25,10 10,5 C -5,15 -20,10 -25,0 Z' fill='%230d140d'/%3E%3Cpath d='M -10,-10 C -5,-5 5,-10 10,-20 M -5,-25 C 0,-20 5,-25 0,-35' fill='none'/%3E%3C/g%3E%3Cg transform='translate(220,180) rotate(-18)'%3E%3Cpath d='M -10,-5 L 10,-5 L 8,10 C 5,15 -5,15 -8,10 Z' fill='%230d140d'/%3E%3Cpath d='M 10,-2 C 18,-2 18,8 8,8' fill='none'/%3E%3Cpath d='M -3,-10 C -8,-15 2,-20 -3,-25 M 3,-10 C -2,-15 8,-20 3,-25' fill='none'/%3E%3Cpath d='M -15,10 L 15,10' fill='none'/%3E%3C/g%3E%3Cg transform='translate(340,160) rotate(22)'%3E%3Cpath d='M -15,5 C -25,-5 -15,-15 -5,-15 C -5,-25 15,-25 15,-15 C 25,-10 20,5 10,5 C 5,10 -10,10 -15,5 Z' fill='%230d140d'/%3E%3Cpath d='M -15,5 L 15,5 M -5,-5 L 0,0 M 5,-5 L 10,0' fill='none'/%3E%3C/g%3E%3Cg transform='translate(460,170) rotate(15)'%3E%3Cpath d='M -20,-5 C -25,-10 -25,10 -15,10 L 15,10 C 25,10 25,-10 20,-5 C 15,0 5,0 0,0 C -5,0 -15,0 -20,-5 Z' fill='%230d140d'/%3E%3Cpath d='M -12,0 L -12,6 M -15,3 L -9,3' fill='none'/%3E%3Ccircle cx='10' cy='1' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='15' cy='5' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(560,180) rotate(-30)'%3E%3Cpath d='M 0,0 C -25,-15 -25,-40 0,-50 C 25,-40 25,-15 0,0 Z' fill='%230d140d'/%3E%3Cpath d='M 0,0 L 0,-45 M 0,-15 L -10,-25 M 0,-15 L 10,-25 M 0,-30 L -10,-40 M 0,-30 L 10,-40' fill='none'/%3E%3C/g%3E%3C!-- Ряд 3 --%3E%3Cg transform='translate(60,280) rotate(-25)'%3E%3Cpath d='M 0,0 C -15,-5 -15,-15 -5,-20 C -15,-30 -5,-40 0,-35 C 5,-40 15,-30 5,-20 C 15,-15 15,-5 0,0 Z' fill='%230d140d'/%3E%3Cpath d='M 0,0 L 0,-30 M 0,-10 L -5,-15 M 0,-10 L 5,-15 M 0,-20 L -5,-25 M 0,-20 L 5,-25' fill='none'/%3E%3C/g%3E%3Cg transform='translate(180,290) rotate(40)'%3E%3Cpath d='M -8,0 C -8,12 8,12 8,0 Z' fill='%230d140d'/%3E%3Cpath d='M -10,0 C -10,-8 10,-8 10,0 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-6 L 0,-10' fill='none'/%3E%3C/g%3E%3Cg transform='translate(300,270) rotate(-15)'%3E%3Cpath d='M -6,-15 C -6,-5 6,-5 6,-15 L 3,-10 L 0,-18 L -3,-10 Z' fill='%230d140d'/%3E%3Cpath d='M 0,0 L 0,-10' fill='none'/%3E%3Cpath d='M 0,-5 C 5,-5 8,-10 8,-10 C 8,-5 5,0 0,0 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-2 C -5,-2 -8,-7 -8,-7 C -8,-2 -5,0 0,0 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(420,290) rotate(20)'%3E%3Cpath d='M -2,0 L -2,-10 L 2,-10 L 2,0 Z' fill='%230d140d'/%3E%3Cpath d='M -10,-10 C -10,-20 10,-20 10,-10 Z' fill='%230d140d'/%3E%3Ccircle cx='-4' cy='-14' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='4' cy='-13' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(540,280) rotate(-35)'%3E%3Ccircle cx='-5' cy='5' r='3' fill='%230d140d'/%3E%3Ccircle cx='5' cy='2' r='3' fill='%230d140d'/%3E%3Cpath d='M -2,5 L -2,-5 L 8,-8 L 8,2 M -2,-2 L 8,-5' fill='none'/%3E%3C/g%3E%3C!-- Ряд 4 --%3E%3Cg transform='translate(100,400) rotate(-25)'%3E%3Cpath d='M -20,-5 C -25,-10 -25,10 -15,10 L 15,10 C 25,10 25,-10 20,-5 C 15,0 5,0 0,0 C -5,0 -15,0 -20,-5 Z' fill='%230d140d'/%3E%3Cpath d='M -12,0 L -12,6 M -15,3 L -9,3' fill='none'/%3E%3Ccircle cx='10' cy='1' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='15' cy='5' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3C/g%3E%3Cg transform='translate(220,390) rotate(-12)'%3E%3Cpath d='M -12,0 L 12,0 L 8,20 L -8,20 Z' fill='%230d140d'/%3E%3Cpath d='M 0,0 L 0,-40' fill='none'/%3E%3Cpath d='M 0,-10 C -15,-10 -20,-20 -5,-25 C 0,-20 0,-15 0,-10 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-20 C 15,-20 20,-30 5,-35 C 0,-30 0,-25 0,-20 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-30 C -15,-30 -20,-40 -5,-45 C 0,-40 0,-35 0,-30 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-40 C 10,-50 0,-55 -5,-45 C -2,-42 0,-42 0,-40 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(340,410) rotate(20)'%3E%3Cpath d='M -15,-10 L 5,-15 L 15,0 L -5,5 Z' fill='%230d140d'/%3E%3Cpath d='M -15,-10 L -15,0 L -5,5 L 15,0' fill='none'/%3E%3Cpath d='M -5,-5 L 5,-8 M -3,-1 L 7,-4' fill='none' stroke-width='1'/%3E%3C/g%3E%3Cg transform='translate(460,390) rotate(18)'%3E%3Cpath d='M -10,-5 L 10,-5 L 8,10 C 5,15 -5,15 -8,10 Z' fill='%230d140d'/%3E%3Cpath d='M 10,-2 C 18,-2 18,8 8,8' fill='none'/%3E%3Cpath d='M -3,-10 C -8,-15 2,-20 -3,-25 M 3,-10 C -2,-15 8,-20 3,-25' fill='none'/%3E%3Cpath d='M -15,10 L 15,10' fill='none'/%3E%3C/g%3E%3Cg transform='translate(560,400) rotate(-15)'%3E%3Cpath d='M -5,0 L -5,25 L 5,25 L 5,0 Z' fill='%230d140d'/%3E%3Cpath d='M -25,0 C -30,-15 -20,-25 -15,-25 C -20,-45 0,-50 10,-40 C 20,-50 35,-30 25,-15 C 35,-5 25,10 10,5 C -5,15 -20,10 -25,0 Z' fill='%230d140d'/%3E%3Cpath d='M -10,-10 C -5,-5 5,-10 10,-20 M -5,-25 C 0,-20 5,-25 0,-35' fill='none'/%3E%3C/g%3E%3C!-- Ряд 5 --%3E%3Cg transform='translate(60,520) rotate(20)'%3E%3Cpath d='M -15,5 C -20,-5 -15,-15 0,-15 C 15,-15 20,-5 15,5 C 10,15 -10,15 -15,5 Z' fill='%230d140d'/%3E%3Cpath d='M -10,-10 L -12,-20 L -2,-13 Z' fill='%230d140d'/%3E%3Cpath d='M 10,-10 L 12,-20 L 2,-13 Z' fill='%230d140d'/%3E%3Cpath d='M -15,5 C -25,10 -15,20 0,15 C 10,10 5,0 5,0' fill='none'/%3E%3Cpath d='M -5,-5 L -2,-2 L 1,-5' fill='none'/%3E%3C/g%3E%3Cg transform='translate(180,510) rotate(15)'%3E%3Ccircle cx='-5' cy='5' r='3' fill='%230d140d'/%3E%3Ccircle cx='5' cy='2' r='3' fill='%230d140d'/%3E%3Cpath d='M -2,5 L -2,-5 L 8,-8 L 8,2 M -2,-2 L 8,-5' fill='none'/%3E%3C/g%3E%3Cg transform='translate(300,530) rotate(-30)'%3E%3Cpath d='M -15,-10 L 15,0 L -15,10 L -5,0 Z' fill='%230d140d'/%3E%3Cpath d='M -5,0 L 5,5 L 15,0' fill='none'/%3E%3Cpath d='M -25,5 C -20,10 -15,5 -15,-10' fill='none' stroke-dasharray='2 3'/%3E%3C/g%3E%3Cg transform='translate(420,510) rotate(-25)'%3E%3Cpath d='M -8,0 C -8,12 8,12 8,0 Z' fill='%230d140d'/%3E%3Cpath d='M -10,0 C -10,-8 10,-8 10,0 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-6 L 0,-10' fill='none'/%3E%3C/g%3E%3Cg transform='translate(540,520) rotate(12)'%3E%3Cpath d='M -12,0 L 12,0 L 8,15 L -8,15 Z' fill='%230d140d'/%3E%3Cpath d='M -8,0 C -8,-30 8,-30 8,0 Z' fill='%230d140d'/%3E%3Cpath d='M -8,-15 C -15,-15 -20,-25 -10,-25 C -5,-25 -5,-20 -5,-15 Z' fill='%230d140d'/%3E%3Cpath d='M 0,-25 L 0,0 M -4,-15 L -4,0 M 4,-15 L 4,0' fill='none'/%3E%3C/g%3E%3C!-- Мелкий декор (Заполнение пустот) --%3E%3Cg transform='translate(120,100) rotate(10)'%3E%3Cpath d='M 0,-5 L 2,-1 L 6,-1 L 3,2 L 4,6 L 0,4 L -4,6 L -3,2 L -6,-1 L -2,-1 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(480,110) rotate(-15)'%3E%3Cpath d='M 0,-5 L 2,-1 L 6,-1 L 3,2 L 4,6 L 0,4 L -4,6 L -3,2 L -6,-1 L -2,-1 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(260,220) rotate(25)'%3E%3Cpath d='M 0,-5 L 2,-1 L 6,-1 L 3,2 L 4,6 L 0,4 L -4,6 L -3,2 L -6,-1 L -2,-1 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(80,360) rotate(-20)'%3E%3Cpath d='M 0,-5 L 2,-1 L 6,-1 L 3,2 L 4,6 L 0,4 L -4,6 L -3,2 L -6,-1 L -2,-1 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(380,340) rotate(5)'%3E%3Cpath d='M 0,-5 L 2,-1 L 6,-1 L 3,2 L 4,6 L 0,4 L -4,6 L -3,2 L -6,-1 L -2,-1 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(500,480) rotate(35)'%3E%3Cpath d='M 0,-5 L 2,-1 L 6,-1 L 3,2 L 4,6 L 0,4 L -4,6 L -3,2 L -6,-1 L -2,-1 Z' fill='%230d140d'/%3E%3C/g%3E%3Cg transform='translate(240,560) rotate(-35)'%3E%3Cpath d='M 0,-5 L 2,-1 L 6,-1 L 3,2 L 4,6 L 0,4 L -4,6 L -3,2 L -6,-1 L -2,-1 Z' fill='%230d140d'/%3E%3C/g%3E%3C!-- Линии ветра --%3E%3Cpath d='M 120,30 Q 135,20 150,30' fill='none' stroke-dasharray='3 3'/%3E%3Cpath d='M 360,120 Q 375,110 390,120' fill='none' stroke-dasharray='3 3'/%3E%3Cpath d='M 250,350 Q 265,340 280,350' fill='none' stroke-dasharray='3 3'/%3E%3Cpath d='M 450,250 Q 465,240 480,250' fill='none' stroke-dasharray='3 3'/%3E%3Cpath d='M 100,480 Q 115,470 130,480' fill='none' stroke-dasharray='3 3'/%3E%3Cpath d='M 350,580 Q 365,570 380,580' fill='none' stroke-dasharray='3 3'/%3E%3C!-- Точки --%3E%3Ccircle cx='30' cy='120' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='280' cy='140' r='2' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='510' cy='80' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='140' cy='250' r='1' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='400' cy='200' r='2' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='50' cy='450' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='280' cy='480' r='2' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='550' cy='340' r='1.5' fill='%232a3d2a' stroke='none'/%3E%3Ccircle cx='400' cy='540' r='2' fill='%232a3d2a' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
-      background-size: 400px 400px;
-      background-position: center;
-      background-repeat: repeat;
-    }
-
-    /* Главная карточка */
-    .container {
-      max-width: 420px;
-      width: 100%;
-      background-color: #0a0a0a;
-      padding: 48px 32px 32px 32px;
-      border-radius: 12px;
-      border: 1px solid #1f1f1f;
+      max-width: 380px;
+      background-color: var(--card-bg);
+      border-radius: 32px;
+      /* Нижний отступ уменьшен до 20px для минималистичного вида */
+      padding: 48px 32px 20px 32px;
+      text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative;
-      overflow: hidden;
     }
 
-    /* Легкий синий отблеск границы */
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: -1px;
-      right: -1px;
-      bottom: -1px;
-      border-radius: 12px;
-      border: 1px solid #114477;
-      opacity: 0.3;
-      z-index: -1;
-    }
-
-    /* Стили для встроенного SVG логотипа */
-    .logo-container {
-      width: 100px;
-      height: 100px;
-      margin-bottom: 24px;
+    .logo-wrapper {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #1e291e 0%, #111811 100%);
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 24px;
     }
 
-    .ficus-logo-svg {
-      width: 100%;
-      height: 100%;
+    .logo-svg {
+      width: 32px;
+      height: 32px;
+      fill: var(--accent-green);
     }
 
     .title {
       font-size: 26px;
       font-weight: 600;
-      letter-spacing: -0.5px;
-      margin-bottom: 32px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
     }
 
-    /* Блок с юзернеймом над кнопками */
-    .username-wrapper {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .username-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px; /* Чуть увеличил отступ для самолетика */
-      padding: 8px 16px;
-      background-color: #141414;
-      border: 1px solid #2a2a2a;
-      border-radius: 100px;
+    .subtitle {
       font-size: 14px;
-      font-weight: 500;
-      color: #a3a3a3;
-      text-decoration: none;
-      transition: all 0.2s ease;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.5;
     }
 
-    .username-link:hover {
-      border-color: #24A124;
-      color: #ffffff;
-      background-color: #081a08;
-    }
-
-    .username-link svg {
-      width: 15px;
-      height: 15px;
-      fill: currentColor;
-    }
-
-    /* Кнопки */
-    .button-group {
+    .loader-container {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      margin-bottom: 24px;
+      align-items: center;
+      gap: 20px;
     }
 
-    .button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+    .loader-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-green);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+    }
+
+    .progress-track {
+      width: 120px;
+      height: 3px;
+      background: #242824;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      position: absolute;
+      width: 40%;
+      height: 100%;
+      background: var(--accent-green);
+      border-radius: 10px;
+      animation: shift 1.8s infinite ease-in-out;
+    }
+
+    @keyframes shift {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(250%); }
+    }
+
+    .actions {
       width: 100%;
-      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      /* Умеренный интервал между кнопками */
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-main {
+      background-color: var(--accent-green);
+      color: #052e16;
+    }
+
+    .btn-main:hover {
+      background-color: #86efac;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: var(--btn-gray);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--btn-gray-hover);
+      transform: translateY(-1px);
+    }
+
+    .bot-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      /* Убран любой дополнительный отступ сверху */
+      margin-top: 2px;
+    }
+
+    .error-wrapper {
+      width: 100%;
+    }
+
+    .error-card {
+      background-color: rgba(251, 113, 133, 0.06);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .error-title {
+      color: var(--error-red);
       font-size: 15px;
       font-weight: 600;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
     }
 
-    /* Основная зеленая кнопка */
-    .button-primary {
-      background-color: #24A124;
-      color: #ffffff;
+    .error-instruction {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 8px;
     }
 
-    .button-primary:hover {
-      background-color: #1f8a1f;
+    .vpn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(251, 113, 133, 0.15);
+      color: var(--error-red);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
     }
 
-    /* Вторичная кнопка */
-    .button-secondary {
-      background-color: transparent;
-      color: #a3a3a3;
-      border: 1px solid #2a2a2a;
-    }
-
-    .button-secondary:hover {
-      background-color: #141414;
-      color: #ffffff;
-      border-color: #3f3f3f;
-    }
-
-    .icon-small {
+    .vpn-badge svg {
       width: 18px;
       height: 18px;
       fill: currentColor;
     }
 
-    /* Блок VPN внизу */
-    .vpn-note {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #666666;
-      width: 100%;
-      padding-top: 24px;
-      border-top: 1px solid #1a1a1a;
-    }
-
-    .vpn-note svg {
-      fill: #555555;
-    }
-
-    /* Утилита скрытия элементов до загрузки */
     .hidden {
       display: none !important;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="background-pattern"></div>
 
-  <main class="container">
-
-    <div class="logo-container">
-    <svg class="ficus-logo-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#7fe0ff"/>
-          <stop offset="60%" stop-color="#3b6fa3"/>
-          <stop offset="100%" stop-color="#1e2a4f"/>
-        </radialGradient>
-
-        <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#4fd1c5" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="#0f2c4c" stop-opacity="0.2"/>
-        </radialGradient>
-
-        <linearGradient id="glass" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
-          <stop offset="100%" stop-color="#7f9db5" stop-opacity="0.9"/>
-        </linearGradient>
-
-        <radialGradient id="leaf" cx="50%" cy="50%" r="70%">
-          <stop offset="0%" stop-color="#7dff7a"/>
-          <stop offset="100%" stop-color="#1c7c3c"/>
-        </radialGradient>
-
-        <filter id="shadow">
-          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.4"/>
-        </filter>
-      </defs>
-
-      <circle cx="256" cy="256" r="230" fill="url(#bgGrad)"/>
-      <circle cx="256" cy="256" r="180" fill="url(#innerGlow)"/>
-
-      <g filter="url(#shadow)">
-        <rect x="150" y="150" width="212" height="212" rx="35"
-              transform="rotate(45 256 256)"
-              fill="url(#glass)"/>
-      </g>
-
-      <!-- листья -->
-      <path d="M256 230
-               C200 180, 160 260, 256 330
-               C270 290, 280 260, 256 230 Z"
-            fill="url(#leaf)"/>
-
-      <path d="M256 230
-               C312 180, 352 260, 256 330
-               C242 290, 232 260, 256 230 Z"
-            fill="url(#leaf)"/>
-    </svg>
-    </div>
-
-    <h1 class="title" id="title">Ficus Bot</h1>
-
-    <div class="username-wrapper hidden" id="username-wrapper">
-      <a href="#" id="tg-username-link" class="username-link">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-        </svg>
-        <span id="username-text"></span>
-      </a>
-    </div>
-
-    <div class="button-group hidden" id="action-buttons">
-      <a href="#" id="tg-btn" class="button button-primary">Открыть Telegram</a>
-
-      <button id="copy-btn" class="button button-secondary">
-        <svg class="icon-small" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-        </svg>
-        <span id="copy-text">Скопировать ссылку</span>
-      </button>
-    </div>
-
-    <div class="vpn-note">
-      <svg class="icon-small" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+  <main class="ficus-card">
+    <div class="logo-wrapper">
+      <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8.13,20C14.34,20 19,15.36 19,9.17C19,8.74 18.97,8.31 18.92,7.9M15.27,12.03C11.21,12.69 8,15.54 6.06,19.21C5.5,17.72 5.15,16.11 5.05,14.5C4.85,11.38 6.44,8.1 8.6,5.85C10.8,3.5 13.71,2.42 15.25,2.42C15.3,2.42 15.33,2.42 15.37,2.42C15.82,2.43 16.17,2.78 16.19,3.23C16.24,4.45 16.03,8.27 15.27,12.03Z"/>
       </svg>
-      <span id="vpn-text">Используйте VPN при проблемах с доступом</span>
+    </div>
+
+    <h1 class="title">Ficus Bot</h1>
+    <p class="subtitle" id="dynamic-status"></p>
+
+    <div id="loading-view" class="loader-container">
+      <div class="progress-track">
+        <div class="progress-bar"></div>
+      </div>
+      <span class="loader-text" id="txt-loading"></span>
+    </div>
+
+    <div id="success-view" class="actions hidden fade-in">
+      <a href="#" id="tg-link" class="btn btn-main"></a>
+      <button id="copy-link" class="btn btn-secondary">
+        <span id="copy-label"></span>
+      </button>
+      <div class="bot-label" id="txt-bot-label"></div>
+    </div>
+
+    <div id="error-view" class="error-wrapper hidden fade-in">
+      <div class="error-card">
+        <span class="error-title" id="txt-err-title"></span>
+        <p class="error-instruction" id="txt-err-desc"></p>
+        <div class="vpn-badge">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+          </svg>
+          <span id="txt-vpn"></span>
+        </div>
+      </div>
+      <button id="btn-retry" class="btn btn-secondary" onclick="window.location.reload()"></button>
     </div>
   </main>
 
   <script>
     const translations = {
       ru: {
-        pageTitle: "Переход в Telegram - Ficus Bot",
-        title: "Ficus Bot",
-        vpnText: "Используйте VPN при проблемах с доступом",
-        btnOpen: "Открыть Telegram",
-        btnCopy: "Скопировать ссылку",
-        btnCopied: "Успешно скопировано"
+        init: "Инициализация соединения...",
+        loading: "ПОЛУЧАЕМ АКТУАЛЬНУЮ ССЫЛКУ",
+        ready: "Готов к переходу в ",
+        open: "Открыть в Telegram",
+        copy: "Копировать ссылку",
+        copied: "Ссылка в буфере",
+        botLabel: "Telegram Бот",
+        errTitle: "Ошибка доступа",
+        errDesc: "Не удалось получить ссылку на бота.<br>Запрос заблокирован провайдером.",
+        vpn: "Пожалуйста, включите VPN",
+        retry: "Повторить попытку",
+        connErr: "Соединение прервано"
       },
       en: {
-        pageTitle: "Redirect to Telegram - Ficus Bot",
-        title: "Ficus Bot",
-        vpnText: "Use a VPN if the connection fails",
-        btnOpen: "Open in Telegram",
-        btnCopy: "Copy Link",
-        btnCopied: "Copied successfully"
+        init: "Initializing connection...",
+        loading: "FETCHING CURRENT LINK",
+        ready: "Ready to redirect to ",
+        open: "Open in Telegram",
+        copy: "Copy Link",
+        copied: "Link copied",
+        botLabel: "Telegram Bot",
+        errTitle: "Access Denied",
+        errDesc: "Could not retrieve the bot link.<br>Request blocked by provider.",
+        vpn: "Please, turn on VPN",
+        retry: "Try Again",
+        connErr: "Connection lost"
       }
     };
 
     document.addEventListener("DOMContentLoaded", async () => {
-      // 1. Применение локализации
-      const userLang = navigator.language || navigator.userLanguage;
-      const lang = userLang.toLowerCase().startsWith('ru') ? 'ru' : 'en';
+      const userLangCode = (navigator.language || navigator.userLanguage).toLowerCase().slice(0, 2);
+      const cisLanguages = ['ru', 'uk', 'be', 'kk', 'uz', 'ky', 'tg', 'tk', 'hy', 'az', 'mo'];
+      const lang = cisLanguages.includes(userLangCode) ? 'ru' : 'en';
+      const t = translations[lang];
 
       document.documentElement.lang = lang;
-      document.getElementById("page-title").textContent = translations[lang].pageTitle;
-      document.getElementById("title").textContent = translations[lang].title;
-      document.getElementById("vpn-text").textContent = translations[lang].vpnText;
+      document.getElementById("dynamic-status").textContent = t.init;
+      document.getElementById("txt-loading").textContent = t.loading;
+      document.getElementById("tg-link").textContent = t.open;
+      document.getElementById("copy-label").textContent = t.copy;
+      document.getElementById("txt-bot-label").textContent = t.botLabel;
+      document.getElementById("txt-err-title").textContent = t.errTitle;
+      document.getElementById("txt-err-desc").innerHTML = t.errDesc;
+      document.getElementById("txt-vpn").textContent = t.vpn;
+      document.getElementById("btn-retry").textContent = t.retry;
 
-      const btnOpen = document.getElementById("tg-btn");
-      const copyText = document.getElementById("copy-text");
+      const views = {
+        loading: document.getElementById("loading-view"),
+        success: document.getElementById("success-view"),
+        error: document.getElementById("error-view")
+      };
 
-      if (btnOpen) btnOpen.textContent = translations[lang].btnOpen;
-      if (copyText) copyText.textContent = translations[lang].btnCopy;
-
-      let BOT_LINK = "";
-      let BOT_USERNAME = "";
-
-      // 2. Загрузка конфига
       try {
-        const url = `https://raw.githubusercontent.com/ChanMQ/chanmq.github.io/main/config.json?t=${Date.now()}`;
-        const response = await fetch(url);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 7000);
+        const configUrl = `https://raw.githubusercontent.com/ChanMQ/chanmq.github.io/main/config.json?t=${Date.now()}`;
+        const response = await fetch(configUrl, { signal: controller.signal });
+        clearTimeout(timeout);
 
-        if (!response.ok) throw new Error("Network response was not ok");
+        if (!response.ok) throw new Error();
         const config = await response.json();
+        const pathPart = window.location.pathname.replace(/^\/+/, "");
+        const finalUrl = pathPart ? `${config.BOT_LINK}?start=${encodeURIComponent(pathPart)}` : config.BOT_LINK;
 
-        BOT_LINK = config.BOT_LINK;
-        BOT_USERNAME = config.BOT_USERNAME;
+        document.getElementById("tg-link").href = finalUrl;
+        document.getElementById("dynamic-status").textContent = t.ready + config.BOT_USERNAME;
+        views.loading.classList.add("hidden");
+        views.success.classList.remove("hidden");
 
-      } catch (error) {
-        console.error("Не удалось загрузить config.json:", error);
-        return;
-      }
-
-      // 3. Формирование финальной ссылки
-      const path = window.location.pathname.replace(/^\/+/, "");
-      const tgLink = path ? `${BOT_LINK}?start=${encodeURIComponent(path)}` : BOT_LINK;
-
-      // 4. Подстановка ссылок и показ кнопок
-      if (btnOpen) btnOpen.href = tgLink;
-
-      const usernameLink = document.getElementById("tg-username-link");
-      const usernameText = document.getElementById("username-text");
-      const usernameWrapper = document.getElementById("username-wrapper");
-      if (usernameLink && usernameText && usernameWrapper) {
-        usernameLink.href = tgLink;
-        usernameText.textContent = `Telegram ${BOT_USERNAME}`;
-        usernameWrapper.classList.remove("hidden");
-      }
-
-      const actionButtons = document.getElementById("action-buttons");
-      if (actionButtons) {
-        actionButtons.classList.remove("hidden");
-      }
-
-      // 5. Логика кнопки копирования
-      const copyBtn = document.getElementById("copy-btn");
-      if (copyBtn) {
-        copyBtn.addEventListener("click", () => {
-          navigator.clipboard.writeText(tgLink).then(() => {
-            copyText.textContent = translations[lang].btnCopied;
-            setTimeout(() => {
-              copyText.textContent = translations[lang].btnCopy;
-            }, 2000);
-          }).catch(err => {
-            console.error('Ошибка при копировании: ', err);
+        document.getElementById("copy-link").addEventListener("click", () => {
+          navigator.clipboard.writeText(finalUrl).then(() => {
+            const label = document.getElementById("copy-label");
+            label.textContent = t.copied;
+            setTimeout(() => { label.textContent = t.copy; }, 2000);
           });
         });
+      } catch (err) {
+        document.getElementById("dynamic-status").textContent = t.connErr;
+        views.loading.classList.add("hidden");
+        views.error.classList.remove("hidden");
       }
 
-      // 6. Очистка хеша из URL
       if (window.location.hash) {
         history.replaceState(null, "", window.location.pathname + window.location.search);
       }
