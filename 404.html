@@ -49,7 +49,6 @@
       max-width: 380px;
       background-color: var(--card-bg);
       border-radius: 32px;
-      /* Нижний отступ уменьшен до 20px для минималистичного вида */
       padding: 48px 32px 20px 32px;
       text-align: center;
       display: flex;
@@ -131,7 +130,6 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      /* Умеренный интервал между кнопками */
       gap: 10px;
       align-items: center;
     }
@@ -170,14 +168,6 @@
     .btn-secondary:hover {
       background-color: var(--btn-gray-hover);
       transform: translateY(-1px);
-    }
-
-    .bot-label {
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 500;
-      /* Убран любой дополнительный отступ сверху */
-      margin-top: 2px;
     }
 
     .error-wrapper {
@@ -226,6 +216,23 @@
       fill: currentColor;
     }
 
+    .update-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .update-icon {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -264,7 +271,13 @@
       <button id="copy-link" class="btn btn-secondary">
         <span id="copy-label"></span>
       </button>
-      <div class="bot-label" id="txt-bot-label"></div>
+      <div id="update-info" class="update-info hidden">
+          <svg class="update-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18A8 8 0 1 1 20 12A8 8 0 0 1 12 20Z" opacity="0.3"/>
+            <path d="M12 6A1 1 0 0 0 11 7V12.41L8.29 15.12A1 1 0 1 0 9.71 16.54L13.12 13.12A1 1 0 0 0 13.41 12.41V7A1 1 0 0 0 12 6Z"/>
+          </svg>
+          <span id="txt-updated"></span>
+      </div>
     </div>
 
     <div id="error-view" class="error-wrapper hidden fade-in">
@@ -288,10 +301,11 @@
         init: "Инициализация соединения...",
         loading: "ПОЛУЧАЕМ АКТУАЛЬНУЮ ССЫЛКУ",
         ready: "Готов к переходу в ",
+        botLabel: "Telegram Бот",
         open: "Открыть в Telegram",
         copy: "Копировать ссылку",
         copied: "Ссылка в буфере",
-        botLabel: "Telegram Бот",
+        updatePrefix: "Ссылка обновлена ",
         errTitle: "Ошибка доступа",
         errDesc: "Не удалось получить ссылку на бота.<br>Запрос заблокирован провайдером.",
         vpn: "Пожалуйста, включите VPN",
@@ -302,10 +316,11 @@
         init: "Initializing connection...",
         loading: "FETCHING CURRENT LINK",
         ready: "Ready to redirect to ",
+        botLabel: "Telegram Bot",
         open: "Open in Telegram",
         copy: "Copy Link",
         copied: "Link copied",
-        botLabel: "Telegram Bot",
+        updatePrefix: "Link updated ",
         errTitle: "Access Denied",
         errDesc: "Could not retrieve the bot link.<br>Request blocked by provider.",
         vpn: "Please, turn on VPN",
@@ -315,17 +330,55 @@
     };
 
     document.addEventListener("DOMContentLoaded", async () => {
-      const userLangCode = (navigator.language || navigator.userLanguage).toLowerCase().slice(0, 2);
+      const userLangCode = (navigator.language || "ru").toLowerCase().slice(0, 2);
       const cisLanguages = ['ru', 'uk', 'be', 'kk', 'uz', 'ky', 'tg', 'tk', 'hy', 'az', 'mo'];
       const lang = cisLanguages.includes(userLangCode) ? 'ru' : 'en';
       const t = translations[lang];
+
+      function getRelativeTimeString(dateString, lang) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.round(diffMs / 60000);
+        const diffHours = Math.floor(diffMins / 60);
+
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const isYesterday = yesterday.toDateString() === date.toDateString();
+
+        const formatTime = (d) => d.toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+        const formatDate = (d) => d.toLocaleDateString(lang, { day: '2-digit', month: '2-digit' });
+
+        if (lang === 'ru') {
+          if (diffMins < 1) return 'только что';
+          if (diffMins < 60) return `${diffMins} мин. назад`;
+
+          const lastDigit = diffHours % 10;
+          const lastTwoDigits = diffHours % 100;
+          let hoursStr = 'часов';
+          if (lastTwoDigits < 11 || lastTwoDigits > 14) {
+            if (lastDigit === 1) hoursStr = 'час';
+            else if ([2, 3, 4].includes(lastDigit)) hoursStr = 'часа';
+          }
+
+          if (diffHours < 24 && !isYesterday) return `${diffHours} ${hoursStr} назад`;
+          if (isYesterday) return `вчера в ${formatTime(date)}`;
+          return `${formatDate(date)} в ${formatTime(date)}`;
+        } else {
+          if (diffMins < 1) return 'just now';
+          if (diffMins < 60) return `${diffMins} mins ago`;
+          if (diffHours === 1) return `1 hour ago`;
+          if (diffHours < 24 && !isYesterday) return `${diffHours} hours ago`;
+          if (isYesterday) return `yesterday at ${formatTime(date)}`;
+          return `${formatDate(date)} at ${formatTime(date)}`;
+        }
+      }
 
       document.documentElement.lang = lang;
       document.getElementById("dynamic-status").textContent = t.init;
       document.getElementById("txt-loading").textContent = t.loading;
       document.getElementById("tg-link").textContent = t.open;
       document.getElementById("copy-label").textContent = t.copy;
-      document.getElementById("txt-bot-label").textContent = t.botLabel;
       document.getElementById("txt-err-title").textContent = t.errTitle;
       document.getElementById("txt-err-desc").innerHTML = t.errDesc;
       document.getElementById("txt-vpn").textContent = t.vpn;
@@ -344,29 +397,65 @@
         const response = await fetch(configUrl, { signal: controller.signal });
         clearTimeout(timeout);
 
-        if (!response.ok) throw new Error();
+        if (!response.ok) throw new Error("Config fetch failed");
         const config = await response.json();
+
         const pathPart = window.location.pathname.replace(/^\/+/, "");
         const finalUrl = pathPart ? `${config.BOT_LINK}?start=${encodeURIComponent(pathPart)}` : config.BOT_LINK;
 
         document.getElementById("tg-link").href = finalUrl;
-        document.getElementById("dynamic-status").textContent = t.ready + config.BOT_USERNAME;
+        document.getElementById("dynamic-status").textContent = `${t.ready}${t.botLabel} ${config.BOT_USERNAME}`;
+
         views.loading.classList.add("hidden");
         views.success.classList.remove("hidden");
 
+        // Fetching GitHub commit history for config.json
+        try {
+          const apiController = new AbortController();
+          const apiTimeout = setTimeout(() => apiController.abort(), 3000);
+
+          const commitUrl = 'https://api.github.com/repos/ChanMQ/chanmq.github.io/commits?path=config.json&page=1&per_page=1';
+          const commitRes = await fetch(commitUrl, { signal: apiController.signal });
+          clearTimeout(apiTimeout);
+
+          if (commitRes.ok) {
+            const commitData = await commitRes.json();
+            if (commitData && commitData.length > 0) {
+              const commitDate = commitData[0].commit.committer.date;
+              const timeString = getRelativeTimeString(commitDate, lang);
+
+              document.getElementById("txt-updated").textContent = t.updatePrefix + timeString;
+              const updateInfoBlock = document.getElementById("update-info");
+              updateInfoBlock.classList.remove("hidden");
+              updateInfoBlock.classList.add("fade-in");
+            }
+          }
+        } catch (apiErr) {
+          console.warn("Не удалось получить дату обновления через API GitHub:", apiErr);
+        }
+
+        // Setup Copy to Clipboard functionality
         document.getElementById("copy-link").addEventListener("click", () => {
-          navigator.clipboard.writeText(finalUrl).then(() => {
-            const label = document.getElementById("copy-label");
-            label.textContent = t.copied;
-            setTimeout(() => { label.textContent = t.copy; }, 2000);
-          });
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(finalUrl).then(() => {
+              const label = document.getElementById("copy-label");
+              label.textContent = t.copied;
+              setTimeout(() => { label.textContent = t.copy; }, 2000);
+            }).catch(err => {
+              console.error("Clipboard copy failed:", err);
+            });
+          } else {
+            console.warn("Clipboard API not supported in this environment");
+          }
         });
+
       } catch (err) {
         document.getElementById("dynamic-status").textContent = t.connErr;
         views.loading.classList.add("hidden");
         views.error.classList.remove("hidden");
       }
 
+      // Cleanup hash from URL if present
       if (window.location.hash) {
         history.replaceState(null, "", window.location.pathname + window.location.search);
       }
