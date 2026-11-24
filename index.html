@@ -312,6 +312,56 @@
       background-color: var(--btn-gray-hover);
     }
 
+    .maintenance-wrapper {
+      width: 100%;
+    }
+
+    .maintenance-card {
+      background-color: rgba(74, 222, 128, 0.06);
+      border: 1px solid rgba(74, 222, 128, 0.10);
+      border-radius: 20px;
+      padding: 28px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .maintenance-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-green);
+      background: rgba(74, 222, 128, 0.12);
+      margin-bottom: 3px;
+    }
+
+    .maintenance-icon svg {
+      width: 27px;
+      height: 27px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .maintenance-title {
+      color: var(--text-main);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .maintenance-description {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.55;
+      text-wrap: balance;
+    }
+
     .error-wrapper {
       width: 100%;
     }
@@ -485,6 +535,18 @@
           </div>
         </div>
 
+        <div id="maintenance-view" class="maintenance-wrapper hidden" role="status" aria-live="polite">
+          <div class="maintenance-card">
+            <div class="maintenance-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14.7 6.3a5 5 0 0 0-6.4 6.4L3.5 17.5a2.1 2.1 0 0 0 3 3l4.8-4.8a5 5 0 0 0 6.4-6.4l-3 3-3.5-3.5 3.5-3.5Z" />
+              </svg>
+            </div>
+            <span class="maintenance-title" id="txt-maintenance-title"></span>
+            <p class="maintenance-description" id="txt-maintenance-desc"></p>
+          </div>
+        </div>
+
         <div id="error-view" class="error-wrapper hidden">
           <div class="error-card">
             <span class="error-title" id="txt-err-title"></span>
@@ -537,7 +599,10 @@
         errDesc: "Не удалось получить ссылку на бота.<br>Запрос заблокирован провайдером.",
         vpn: "Пожалуйста, включите VPN",
         retry: "Повторить попытку",
-        connErr: "Соединение прервано"
+        connErr: "Соединение прервано",
+        maintenanceStatus: "Сервис временно недоступен",
+        maintenanceTitle: "Технические работы",
+        maintenanceDesc: "В боте ведутся технические работы. Пожалуйста, попробуйте зайти позже."
       },
       en: {
         init: "Initializing connection...",
@@ -556,7 +621,10 @@
         errDesc: "Could not retrieve the bot link.<br>Request blocked by provider.",
         vpn: "Please, turn on VPN",
         retry: "Try Again",
-        connErr: "Connection lost"
+        connErr: "Connection lost",
+        maintenanceStatus: "Service temporarily unavailable",
+        maintenanceTitle: "Maintenance",
+        maintenanceDesc: "The bot is currently undergoing maintenance. Please try again later."
       }
     };
 
@@ -612,6 +680,8 @@
       document.getElementById("tg-web-label").innerHTML = t.openWeb;
       document.getElementById("copy-label").textContent = t.copy;
       document.getElementById("txt-err-title").textContent = t.errTitle;
+      document.getElementById("txt-maintenance-title").textContent = t.maintenanceTitle;
+      document.getElementById("txt-maintenance-desc").textContent = t.maintenanceDesc;
       document.getElementById("txt-err-desc").innerHTML = t.errDesc;
       document.getElementById("txt-vpn").textContent = t.vpn;
       document.getElementById("btn-retry").textContent = t.retry;
@@ -621,7 +691,8 @@
       const views = {
         loading: document.getElementById("loading-view"),
         success: document.getElementById("success-view"),
-        error: document.getElementById("error-view")
+        error: document.getElementById("error-view"),
+        maintenance: document.getElementById("maintenance-view")
       };
 
       // Плавная смена экранов и запуск анимации разъезда
@@ -652,6 +723,25 @@
 
         const lastModified = response.headers.get('Last-Modified');
         const config = await response.json();
+
+        // MAINTENANCE: "on" показывает экран технических работ, "off" — обычную страницу.
+        const maintenanceEnabled = String(config.MAINTENANCE ?? "off").trim().toLowerCase() === "on";
+        if (maintenanceEnabled) {
+          document.getElementById("dynamic-status").textContent = t.maintenanceStatus;
+
+          const elapsed = Date.now() - fetchStartTime;
+          const minLoadingTime = 1200;
+          if (elapsed < minLoadingTime) {
+            await new Promise(resolve => setTimeout(resolve, minLoadingTime - elapsed));
+          }
+
+          transitionTo(views.maintenance);
+
+          if (window.location.hash) {
+            history.replaceState(null, "", window.location.pathname + window.location.search);
+          }
+          return;
+        }
 
         const pathPart = window.location.pathname.replace(/^\/+/, "");
         const startParamApp = pathPart ? `&start=${encodeURIComponent(pathPart)}` : "";
