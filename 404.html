@@ -724,8 +724,9 @@
         const lastModified = response.headers.get('Last-Modified');
         const config = await response.json();
 
-        // MAINTENANCE: "on" показывает экран технических работ, "off" — обычную страницу.
-        const maintenanceEnabled = String(config.MAINTENANCE ?? "off").trim().toLowerCase() === "on";
+        // Если MAINTENANCE отсутствует в config.json, считаем режим выключенным.
+        // Только значение "on" включает экран технических работ.
+        const maintenanceEnabled = String(config?.MAINTENANCE ?? "off").trim().toLowerCase() === "on";
         if (maintenanceEnabled) {
           document.getElementById("dynamic-status").textContent = t.maintenanceStatus;
 
